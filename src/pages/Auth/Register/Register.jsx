@@ -108,7 +108,7 @@ const Register = () => {
 
   const handleSignUp = (e) => {
     e.preventDefault()
-    if(formik.errors.firstName || formik.errors.lastName || formik.values.profile_photo && formik.errors.profile_photo || formik.errors.phone ||  formik.errors.email || formik.errors.password){
+    if(formik.errors.firstName || formik.errors.lastName || (formik.values.profile_photo !== "" && formik.errors.profile_photo) || formik.errors.phone ||  formik.errors.email || formik.errors.password){
       return
     }
 
