@@ -1,0 +1,11 @@
+*{
+  box-sizing: border-box;
+  padding: 0;
+}
+
+#root {
+  max-width: 1560px;
+  margin: 0 auto;
+}
+
+
