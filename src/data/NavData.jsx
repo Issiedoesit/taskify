@@ -19,7 +19,7 @@ const NavData = [
         end:true
     },
     {
-        pageName: 'Task',
+        pageName: 'Projects',
         icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M22 16.74V4.67001C22 3.47001 21.02 2.58001 19.83 2.68001H19.77C17.67 2.86001 14.48 3.93001 12.7 5.05001L12.53 5.16001C12.24 5.34001 11.76 5.34001 11.47 5.16001L11.22 5.01001C9.44 3.90001 6.26 2.84001 4.16 2.67001C2.97 2.57001 2 3.47001 2 4.66001V16.74C2 17.7 2.78 18.6 3.74 18.72L4.03 18.76C6.2 19.05 9.55 20.15 11.47 21.2L11.51 21.22C11.78 21.37 12.21 21.37 12.47 21.22C14.39 20.16 17.75 19.05 19.93 18.76L20.26 18.72C21.22 18.6 22 17.7 22 16.74Z" stroke="#292D3299" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         <path d="M12 5.48999V20.49" stroke="#292D3299" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -32,6 +32,27 @@ const NavData = [
         <path d="M7.75 8.48999H5.5" stroke="#546FFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         <path d="M8.5 11.49H5.5" stroke="#546FFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>,        
+        link:'/projects',
+        end:false
+    },
+    {
+        pageName: 'Task',
+        icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21.93 6.76001L18.56 20.29C18.32 21.3 17.42 22 16.38 22H3.24001C1.73001 22 0.650023 20.5199 1.10002 19.0699L5.31001 5.55005C5.60001 4.61005 6.47003 3.95996 7.45003 3.95996H19.75C20.7 3.95996 21.49 4.53997 21.82 5.33997C22.01 5.76997 22.05 6.26001 21.93 6.76001Z" stroke="#292D3299" stroke-width="1.5" stroke-miterlimit="10"/>
+        <path d="M16 22H20.78C22.07 22 23.08 20.91 22.99 19.62L22 6" stroke="#292D3299" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M9.67999 6.38L10.72 2.06006" stroke="#292D3299" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M16.38 6.39001L17.32 2.05005" stroke="#292D3299" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M7.70001 12H15.7" stroke="#292D3299" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M6.70001 16H14.7" stroke="#292D3299" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>,
+        activeIcon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21.93 6.76001L18.56 20.29C18.32 21.3 17.42 22 16.38 22H3.24001C1.73001 22 0.650023 20.5199 1.10002 19.0699L5.31001 5.55005C5.60001 4.61005 6.47003 3.95996 7.45003 3.95996H19.75C20.7 3.95996 21.49 4.53997 21.82 5.33997C22.01 5.76997 22.05 6.26001 21.93 6.76001Z" stroke="#292D3299" stroke-width="1.5" stroke-miterlimit="10"/>
+        <path d="M16 22H20.78C22.07 22 23.08 20.91 22.99 19.62L22 6" stroke="#292D3299" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M9.67999 6.38L10.72 2.06006" stroke="#546FFF" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M16.38 6.39001L17.32 2.05005" stroke="#546FFF" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M7.70001 12H15.7" stroke="#546FFF" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M6.70001 16H14.7" stroke="#546FFF" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>,
         link:'/task',
         end:false
     },

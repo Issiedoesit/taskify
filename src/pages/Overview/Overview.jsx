@@ -3,6 +3,7 @@ import DashTemplate from '../../components/Wraps/DashTemplate'
 import UserImgHeader from '../../components/Sections/UserImgHeader'
 import CardWrap from '../../components/Wraps/CardWrap'
 import HeaderAndText from '../../components/Sections/HeaderAndText'
+import TaskCardWrap from '../../components/Wraps/TaskCardWrap'
 
 const Overview = () => {
     return (
@@ -41,8 +42,15 @@ const Overview = () => {
                     </CardWrap>
                 </div>
 
-                <div className={``}>
+                <div className={`flex flex-col gap-8 w-full`}>
                     <HeaderAndText header={"Current Tasks"} subHeader={"A glimpse into your tasks"} />
+
+                    <div className={`flex flex-row gap-8 w-full`}>
+                        <div className={`w-full grid md:grid-cols-2 gap-y-8 md:gap-x-8`}>
+                            <TaskCardWrap />
+                            <TaskCardWrap />
+                        </div>
+                    </div>
                 </div>
 
             </div>

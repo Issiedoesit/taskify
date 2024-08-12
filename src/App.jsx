@@ -7,16 +7,18 @@ import Overview from './pages/Overview/Overview'
 import Register from './pages/Auth/Register/Register'
 import Login from './pages/Auth/Login/Login'
 import DashboardPrivateRoute from './privateRoutes/DashboardPrivateRoute'
+import Task from './pages/Task/Task'
+import Projects from './pages/Projects/Projects'
 
 function App() {
 
   return (
-    <div className={`font-avenirRegular`}>
+    <div className={`font-avenirRegular bg-brandDashGray1x`}>
       <Routes>
-        <Route element={<DashboardPrivateRoute
-         />}>
-        <Route path={``} element={<Overview />}  />
-
+        <Route element={<DashboardPrivateRoute />}>
+          <Route path={``} element={<Overview />} />
+          <Route path={`/projects`} element={<Projects />} />
+          <Route path={`/task`} element={<Task />} />
         </Route>
         <Route path='/auth'>
           <Route path='register' element={<Register />} />
