@@ -8,7 +8,7 @@ const TaskCardWrap = ({ taskImg, name, description, creator, members, date, maxW
             {
                 taskImg
                     ?
-                    <img src={taskImg} alt={description} className={`w-full object-cover rounded-t-ten`} />
+                    <img src={taskImg} alt={description} className={`skeleton--white w-full object-cover rounded-t-ten`} />
                     :
                     <div className={`h-40 rounded-t-ten bg-brandLightBlue1x w-full flex items-center justify-center p-6`}>
                         <svg className={`h-20 w-20 opacity-20`} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

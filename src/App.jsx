@@ -9,6 +9,7 @@ import Login from './pages/Auth/Login/Login'
 import DashboardPrivateRoute from './privateRoutes/DashboardPrivateRoute'
 import Task from './pages/Task/Task'
 import Projects from './pages/Projects/Projects'
+import ProjectDynamic from './pages/Projects/ProjectDynamic'
 
 function App() {
 
@@ -17,7 +18,10 @@ function App() {
       <Routes>
         <Route element={<DashboardPrivateRoute />}>
           <Route path={``} element={<Overview />} />
-          <Route path={`/projects`} element={<Projects />} />
+          <Route path={`projects`} >
+            <Route path='' element={<Projects />} />
+            <Route path=':projectId' element={<ProjectDynamic />} />
+          </Route>
           <Route path={`/task`} element={<Task />} />
         </Route>
         <Route path='/auth'>

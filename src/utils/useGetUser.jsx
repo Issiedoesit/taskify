@@ -8,6 +8,11 @@ const useGetUser = () => {
       return storedUserData ? JSON.parse(storedUserData) : null;
     });
 
+    const [token, setToken] = useState(() => {
+      const storedTokenData = Cookies.get('token');
+      return storedTokenData ? storedTokenData : null;
+    });
+
     const navigate = useNavigate();
 
     const logout = () => {
@@ -20,6 +25,8 @@ const useGetUser = () => {
     return {
       user,
       setUser,
+      token,
+      setToken,
       logout,
     };
 };

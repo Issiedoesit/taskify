@@ -6,7 +6,7 @@ import UserImgAndNotif from './UserImgAndNotif'
 const UserImgHeader = ({header, subHeader}) => {
 
     const {user} = useGetUser()
-    console.log(user)
+    // console.log(user)
 
     
   return (
