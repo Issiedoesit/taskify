@@ -7,20 +7,28 @@ import useGetUser from '../../utils/useGetUser'
 import PageLoaderNoNav from "../../components/Loaders/PageLoaderNoNav"
 import ErrorPageNotFound from '../../components/Error/ErrorPageNotFound'
 import HeaderAndText from '../../components/Sections/HeaderAndText'
+import ProjectTask from './ProjectDisplay/ProjectTask'
+import CreateTask from '../Task/CreateTask'
 
 const ProjectDynamic = () => {
 
     const [projectId, setProjectId] = useState(location.pathname.split('projects/')[1])
-    const [tab, setTab] = useState("tasks")
+    const [currentTab, setCurrentTab] = useState("tasks")
+    const [isOpen, setIsOpen] = useState(false)
 
     const tabs = [
         {
             id:"tasks",
-            name:"Tasks"
+            name:"Tasks",
+            element:<ProjectTask setIsOpen={setIsOpen} isOpen={isOpen} />
         },
         {
             id:"members",
             name:"Members"
+        },
+        {
+            id:"manage",
+            name:"Manage"
         }
     ]
 
@@ -32,19 +40,20 @@ const ProjectDynamic = () => {
 
 
     // !isLoading && project?.data && console.log(project)
-    !isLoading && project?.data && console.log(project.data)
+    // !isLoading && project?.data && console.log(project.data)
 
     const projectData = [project?.data?.data] || []
-    console.log(projectData)
+    // console.log(projectData)
 
     if (isLoading) return <DashTemplate><PageLoaderNoNav /></DashTemplate>
     if (error || project.data.code == 400) return <ErrorPageNotFound page={"Projects"} link={"/projects"} message={project?.data?.message} />
 
     return (
-        <DashTemplate>
+        <>
+            <DashTemplate>
             <UserImgHeader subHeader={"Manage your projects easily!"} />
-            <div className='grid md:grid-cols-3 gap-10 h-full pt-10'>
-                <div className={`flex flex-col gap-10 md:col-span-2`}>
+            <div className='grid md:grid-cols-3 gap-10 h-full pt-10 w-full'>
+                <div className={`flex flex-col gap-10 md:col-span-2 w-full`}>
                     {
                         projectData?.map((project, idx) => {
                             return <>
@@ -73,6 +82,23 @@ const ProjectDynamic = () => {
                                         <p className='capitalize font-avenirHeavy'>{`${project?.creator?.first_name} ${project?.creator?.last_name}`}</p>
                                     </div>
                                 </div>
+
+                                <div className={`border-b-0.5 border-b-brandBlue1x/20 grid`}>
+                                        <div className='overflow-x-auto flex flex-row'>
+                                        {
+                                            tabs.map((tab, i)=>{
+                                                return <div key={i} className={`pb-4 w-fit`}>
+                                                    <button onClick={()=>setCurrentTab(tab.id)} className={`py-2 px-6 rounded-full ${currentTab == tab.id ? "bg-brandBlue1x text-white" : ""} transition-all duration-300 ease-in-out`}>{tab.name}</button>
+                                                </div>
+                                            })
+                                        }
+                                        </div>
+                                </div>
+                                <div className=''>
+                                    {
+                                        tabs.filter(tab => tab.id == currentTab)[0].element
+                                    }
+                                </div>
                             </>
                         })
                     }
@@ -82,6 +108,8 @@ const ProjectDynamic = () => {
                 </div>
             </div>
         </DashTemplate>
+        <CreateTask setIsOpen={setIsOpen} isOpen={isOpen} />
+        </> 
     )
 }
 
