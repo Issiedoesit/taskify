@@ -18,11 +18,11 @@ const Projects = () => {
 
     const fetcher = async (url) => axios.get(url, { headers: { Authorization: `Bearer ${token}` } })
 
-    const { data: project, error, isLoading, mutate } = useSWR(import.meta.env.VITE_BASEURL + `/project`, fetcher, { refreshInterval: 1000 })
+    const { data: project, error, isLoading, mutate } = useSWR(import.meta.env.VITE_BASEURL + `/project`, fetcher, { refreshInterval: 200 })
 
 
     // !isLoading && project?.data && console.log(project)
-    !isLoading && project?.data && console.log(project.data)
+    // !isLoading && project?.data && console.log(project.data)
 
     const projectData = project?.data?.data || []
 

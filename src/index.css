@@ -91,4 +91,9 @@
   .capitalize--first::first-letter {
     text-transform: capitalize;
   }
+
+  /* .project{
+    transform: translateY(2);
+  } */
+
   

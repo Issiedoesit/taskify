@@ -34,8 +34,7 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId }) => {
             title: "",
             description: '',
             notes: "",
-            due_date: new Date(),
-            user_id: ""
+            due_date: `${new Date()}`,
         },
         validationSchema: Yup.object({
             title: Yup.string()
@@ -65,10 +64,10 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId }) => {
         const body = {
             'title': formik.values.title,
             'description': formik.values.description,
-            "user_id": formik.values.user_id,
+            "user_id": selectId,
             "project_id": projectId,
-            "due_date": "2024-08-11 13:56:28.257",
-            "notes": "" //optional
+            "due_date": formik.values.due_date,
+            "notes": formik.values.notes //optional
         }
 
 
@@ -118,16 +117,22 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId }) => {
     }
 
     const nextstep = () => {
-        if (formik.errors.title || formik.errors.description || formik.errors.due_date) {
-            return null
+
+        console.log(formik.errors)
+        
+        if (formik.values.title == "" || formik.values.description == "" || formik.values.due_date == "") {
+            setStep(0)
         }else{
             setStep(1)
         }
+        // if (formik.errors.title || formik.errors.description || formik.errors.due_date) {
+        //     setStep(0)
+        // }
     }
 
 
     return (
-        <ModalWrap id={"createTaskModal"} modalState={isOpen} handleModal={() => setIsOpen(false)} >
+        <ModalWrap hideOverflowid={"createTaskModal"} modalState={isOpen} handleModal={() => setIsOpen(false)} >
 
             {
                 step == 0
@@ -136,9 +141,9 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId }) => {
                     <AuthInput inputId={"title"} inputName={"title"} inputLabel={"Title"} inputPlaceholder={"Task X"} handleChange={formik.handleChange} handleBlur={formik.handleBlur} inputValue={formik.values.title} fieldError={formik.touched.title && formik.errors.title} />
                     <AuthInput inputId={"description"} inputName={"description"} inputLabel={"Description"} inputPlaceholder={"A design file for task X space mission..."} handleChange={formik.handleChange} handleBlur={formik.handleBlur} inputValue={formik.values.description} fieldError={formik.touched.description && formik.errors.description} />
                     <AuthInput inputType={"date"} inputId={"due_date"} inputName={"due_date"} inputLabel={"Due date"} inputPlaceholder={""} handleChange={formik.handleChange} handleBlur={formik.handleBlur} inputValue={formik.values.due_date} fieldError={formik.touched.due_date && formik.errors.due_date} />
-                    <AuthTextArea textAreaLabel={"Notes (Optional)"} textAreaPlaceholder={"Add a note ..."} />
+                    <AuthTextArea textAreaLabel={"Notes (Optional)"} textAreaPlaceholder={"Add a note ..."} textAreaId={"notes"} textAreaName={"notes"} handleChange={formik.handleChange} handleBlur={formik.handleBlur} textAreaValue={formik.values.notes} fieldError={formik.touched.notes && formik.errors.notes} />
                     <div className='pt-4'>
-                        <ButtonPrimary disabled={submitting} disabledBgColor={"disabled:bg-brandGray16x"} width={"w-full"} text={"New Task"} bgColor={"bg-brandBlue1x"} handleClick={nextstep} />
+                        <ButtonPrimary disabled={submitting} disabledBgColor={"disabled:bg-brandGray16x"} width={"w-full"} text={"Assign User"} bgColor={"bg-brandBlue1x"} handleClick={nextstep} />
                     </div>
                 </ModalInner>
             }
@@ -146,8 +151,8 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId }) => {
             {
                 step == 1
                 &&
-                <ModalInner height={"h-full"} title={"Create a Task"}>
-                    <div className='flex flex-col justify-between h-full'>
+                <ModalInner formHeight={"h-full pb-20"} formTopPad={"pt-4"} height={"h-full"} title={"Create a Task"}>
+                    <div className='h-full pb-20'>
                         <div className={`pb-4 text-xs`}>
                             <p>
                                 Assign
@@ -157,14 +162,15 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId }) => {
                                 to:
                             </p>
                         </div>
-                        <div className='overflow-y-hidden'>
-                            <div>
-                                <DisplayAllUsers selectId={selectId} setSelectId={setSelectId} />
-                            </div>
+                        {/* <div className='flex w-full h-fit bg overflow-y-auto'>
+                        </div> */}
+                        <div className='flex-grow grid h-full overflow-y-auto'>
+                        <DisplayAllUsers selectId={selectId} setSelectId={setSelectId} />
+
                         </div>
-                        <div className='pt-4 flex flex-col gap-2'>
+                        <div className='pt-6 flex flex-row gap-2'>
                             <ButtonPrimary disabled={submitting} disabledBgColor={"disabled:bg-brandGray16x"} width={"w-full"} text={"Back"} bgColor={"bg-brandSec500"} handleClick={()=>setStep(0)} />
-                            <ButtonPrimary disabled={submitting} disabledBgColor={"disabled:bg-brandGray16x"} width={"w-full"} text={"New Task"} bgColor={"bg-brandBlue1x"} handleClick={handleProjectCreate} />
+                            <ButtonPrimary disabled={submitting} disabledBgColor={"disabled:bg-brandGray16x"} width={"w-full"} text={"Create"} bgColor={"bg-brandBlue1x"} handleClick={handleProjectCreate} />
                         </div>
                     </div>
                 </ModalInner>

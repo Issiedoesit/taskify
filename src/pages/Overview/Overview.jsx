@@ -1,11 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react'
 import DashTemplate from '../../components/Wraps/DashTemplate'
 import UserImgHeader from '../../components/Sections/UserImgHeader'
 import CardWrap from '../../components/Wraps/CardWrap'
 import HeaderAndText from '../../components/Sections/HeaderAndText'
 import TaskCardWrap from '../../components/Wraps/TaskCardWrap'
+import useGetUser from '../../utils/useGetUser'
+import axios from 'axios'
+import useSWR from 'swr'
+import PageLoaderNoNav from '../../components/Loaders/PageLoaderNoNav'
 
 const Overview = () => {
+
+
+    const { user, token } = useGetUser()
+    const [isOpen, setIsOpen] = useState(false)
+
+    const fetcher = async (url) => axios.get(url, { headers: { Authorization: `Bearer ${token}` } })
+
+    const { data: project, error, isLoading, mutate } = useSWR(import.meta.env.VITE_BASEURL + `/project`, fetcher, { refreshInterval: 200 })
+
+
+    // !isLoading && project?.data && console.log(project)
+    !isLoading && project?.data && console.log(project.data)
+
+    const projectData = project?.data?.data || []
+
+    if (isLoading) return <DashTemplate><PageLoaderNoNav /></DashTemplate>
+
     return (
         <DashTemplate>
             <UserImgHeader />
@@ -43,12 +64,15 @@ const Overview = () => {
                 </div>
 
                 <div className={`flex flex-col gap-8 w-full`}>
-                    <HeaderAndText header={"Current Tasks"} subHeader={"A glimpse into your tasks"} />
+                    <HeaderAndText header={"Current Projects"} subHeader={"A glimpse into your projects"} buttonText={"New Project"} />
 
                     <div className={`flex flex-row gap-8 w-full`}>
-                        <div className={`w-full grid md:grid-cols-2 gap-y-8 md:gap-x-8`}>
-                            <TaskCardWrap />
-                            <TaskCardWrap />
+                        <div className={`w-full grid md:grid-cols-2 lg:grid-cols-3 gap-y-8 md:gap-x-8`}>
+                            {
+                                projectData.slice(0,3).map((project, idx) => {
+                                    return <TaskCardWrap key={idx} link={`projects/${project.project_id}`} creator={project.creator} members={project.users} taskImg={project.project_photo} name={project.name} description={project.description} hideDue />
+                                })
+                            }
                         </div>
                     </div>
                 </div>

@@ -308,6 +308,7 @@ export default {
         hundredPercent: '100%',
         oneTwentyPercent: '120%',
         oneFiftyPercent: '150%',
+        twoHundredPercent: '200%',
         threeHundredPercent: '300%'
       },
       screens:{

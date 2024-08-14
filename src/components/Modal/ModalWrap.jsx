@@ -68,9 +68,6 @@ const ModalWrap = ({id, children, modalState, handleModal, itemPosition, padding
     <div ref={modalRef} id={id} className={`z-80 ${modalState ? 'flex' : 'hidden'} modal flex-col fixed top-0 col-span-12 left-0 w-full h-full max-h-screen xl:h-screen ${hideOverflow ? 'overflow-hidden' : 'overflow-y-auto'} ${paddingY ? paddingY : 'py-20'} backdrop-blur-sm ${overlayColor ? overlayColor : 'bg-black/30'} ${itemPosition ? itemPosition : 'items-center'} z-50`}>
         <div onClick={handleModal} ref={closerRef} style={{height:`${height}px`}} className='overlay cursor-pointer pop-up-closer w-full h-auto min-h-full z-20 fixed top-0 left-0 '></div>
         {/* {height} */}
-        <div className='relative z-30'>
-        {/* {(modalRef && modalRef.current) && modalRef.current.scrollHeight} */}
-        </div>
         {children}
     </div>
   )

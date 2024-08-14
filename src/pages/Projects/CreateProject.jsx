@@ -60,7 +60,7 @@ const CreateProject = ({isOpen, setIsOpen, mutate}) => {
               axios.post(`${import.meta.env.VITE_BASEURL}/project`, formData, {headers:{Authorization:`Bearer ${token}`}})
               .then((res)=>{
                 console.log('create project data', res.data);
-                console.log('create project message', res.data.message);
+                // console.log('create project message', res.data.message);
                   if(res.data.status !== "success" && res.data.responseCode !== "00" && res.data.message){
                       toast.error(res.data.message, {
                           // position: toast.POSITION.TOP_RIGHT, //can't find position, throwing error

@@ -6,7 +6,7 @@ import UserImgAndNotif from '../Sections/UserImgAndNotif'
 import useGetUser from '../../utils/useGetUser'
 import useScrollDirection from '../../hooks/useScrollDirection'
 
-const DashTemplate = ({ children }) => {
+const DashTemplate = ({ messageProjectView, children }) => {
 
   const menuRef = useRef(null)
   const [isOpen, setIsOpen] = useState(false)
@@ -16,12 +16,12 @@ const DashTemplate = ({ children }) => {
   const { scrollUp } = useScrollDirection()
 
   return (
-    <div className='z-20 flex w-full bg-brandDashGray1x min-h-full'>
+    <div className='flex w-full bg-brandDashGray1x min-h-full'>
       <Nav menuRef={menuRef} isOpen={isOpen} setIsOpen={setIsOpen} />
 
       {/* large screen */}
       <div className='hidden xl:block z-20 w-full h-screen overflow-hidden bg-brandDashGray1x'>
-        <div className={`h-60px ${scrollUp && "sticky top-0 left-0 bg-brandDashGray1x shadow-md"}  xl:hidden border-b-0.5 border-b-brandGray2x`}>
+        <div className={`h-60px z-50 ${scrollUp && "sticky top-0 left-0 bg-brandDashGray1x shadow-md"}  xl:hidden border-b-0.5 border-b-brandGray2x`}>
           <div className='flex xl:hidden h-full items-center justify-between gap-10 px-8 md:px-10'>
             <NavLink to="/" className=''>
               <img src={Logo} alt='logo' className='w-7' />
@@ -52,7 +52,7 @@ const DashTemplate = ({ children }) => {
 
       {/* mobile */}
       <div className='z-20 w-full block xl:hidden min-h-screen bg-brandDashGray1x'>
-        <div className={`h-60px ${scrollUp && "sticky top-0 left-0 bg-brandDashGray1x shadow-md"}  xl:hidden border-b-0.5 border-b-brandGray2x`}>
+        <div className={`h-60px z-50 ${scrollUp && "sticky top-0 left-0 bg-brandDashGray1x shadow-md"}  xl:hidden border-b-0.5 border-b-brandGray2x`}>
           <div className='flex xl:hidden h-full items-center justify-between gap-10 px-8 md:px-10'>
             <NavLink to="/" className=''>
               <img src={Logo} alt='logo' className='w-7' />
@@ -71,7 +71,7 @@ const DashTemplate = ({ children }) => {
 
           </div>
         </div>
-        <div className={`pb-48 lg:pb-24 pt-8 px-8 md:px-10 bg-brandDashGray1x overflow-y-auto h-full min-h-full w-full flex flex-col max-w-full overflow-x-hidden`}>
+        <div className={`lg:pb-24 pt-8 px-8 md:px-10 bg-brandDashGray1x overflow-y-auto h-full min-h-full w-full flex flex-col max-w-full overflow-x-hidden`}>
           {children}
         </div>
       </div>
