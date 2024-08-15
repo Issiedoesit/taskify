@@ -13,6 +13,9 @@ import ProjectDynamic from './pages/Projects/ProjectDynamic'
 import Messages from './pages/Messages/Messages'
 import Deadline from './pages/Deadline/Deadline'
 import Settings from './pages/Settings/Settings'
+import '@mantine/core/styles.css';
+
+import { MantineProvider } from '@mantine/core';
 
 function App() {
 
@@ -23,6 +26,7 @@ function App() {
   },[location])
 
   return (
+    <MantineProvider>
     <div className={`font-avenirRegular bg-brandDashGray1x`}>
       <Routes>
         <Route element={<DashboardPrivateRoute />}>
@@ -42,6 +46,7 @@ function App() {
         </Route>
       </Routes>
     </div>
+    </MantineProvider>
   )
 }
 

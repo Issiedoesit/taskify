@@ -8,8 +8,10 @@ import useGetUser from '../../utils/useGetUser'
 import axios from 'axios'
 import useSWR from 'swr'
 import PageLoaderNoNav from '../../components/Loaders/PageLoaderNoNav'
+import LoadMore from '../../components/Pagination/LoadMore'
 import CreateProject from './CreateProject'
 import { ToastContainer } from 'react-toastify'
+import useLoadMore from '../../utils/useLoadMore'
 
 const Projects = () => {
 
@@ -25,6 +27,9 @@ const Projects = () => {
     // !isLoading && project?.data && console.log(project.data)
 
     const projectData = project?.data?.data || []
+
+    const {slicedDataRows, moreRows, rows, rowsPerView} = useLoadMore(projectData, 2)
+
 
     if (isLoading) return <DashTemplate><PageLoaderNoNav /></DashTemplate>
 
@@ -95,7 +100,11 @@ const Projects = () => {
                     <div className={`flex flex-col gap-8 w-full`}>
                         <HeaderAndText handleClick={() => setIsOpen(true)} header={"Projects"} subHeader={"A glimpse into your projects"} buttonText={"New Project"} />
                         <div className={`w-full overflow-x-auto`}>
-                            <ProjectTable data={projectData} />
+                            <ProjectTable data={slicedDataRows} />
+                        </div>
+                        <div className='pt-4'>
+                            {projectData.length > rowsPerView && <LoadMore rows_per_view={rowsPerView} moreRows={moreRows} rows={rows} listLength={projectData.length} />}
+
                         </div>
                     </div>
                 </div>

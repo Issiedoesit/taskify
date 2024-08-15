@@ -13,7 +13,7 @@ import { ToastContainer } from 'react-toastify'
 import ProjectMembers from './ProjectDisplay/ProjectMembers'
 import ButtonPrimaryIcon from '../../components/Buttons/ButtonPrimaryIcon'
 import ViewTask from '../Task/TasksDisplay.jsx/ViewTask'
-import { FaChevronLeft, FaLock } from 'react-icons/fa'
+import { FaChevronLeft, FaLock, FaPlus } from 'react-icons/fa'
 import { FaMessage } from "react-icons/fa6";
 
 const ProjectDynamic = () => {
@@ -55,18 +55,18 @@ const ProjectDynamic = () => {
             id: "tasks",
             name: `Tasks (${projectData[0].tasks.length})`,
             element: <ProjectTask isAdmin={isAdmin} setIsViewTaskOpen={openViewTask} setIsOpen={setIsOpen} isOpen={isOpen} tasks={projectData[0].tasks} users={projectData[0].users} />,
-            canView:"all"
+            canView: "all"
         },
         {
             id: "members",
             name: `Members (${projectData[0].users.length})`,
             element: <ProjectMembers users={projectData[0].users} creator={projectData[0].creator} isAdmin={isAdmin} />,
-            canView:"all"
+            canView: "all"
         },
         {
             id: "manage",
             name: "Manage",
-            canView:"admin"
+            canView: "admin"
         }
     ]
 
@@ -76,7 +76,7 @@ const ProjectDynamic = () => {
         <>
             <DashTemplate>
                 <UserImgHeader subHeader={"Manage your projects easily!"} />
-                
+
                 <div className='relative lg:static w-full overflow-hidden lg:overflow-visible'>
                     <div className={`flex ${translate ? "h-screen lg:h-full" : ""} lg:grid lg:grid-cols-3 lg:gap-10 h-full pt-10 w-full lg:w-full transition-transform duration-300 ease-in-out ${translate ? "-translate-x-hundredPercent lg:translate-x-0" : ""}`}>
                         <div className={`min-w-full flex flex-col gap-4 md:col-span-2 w-full`}>
@@ -108,17 +108,17 @@ const ProjectDynamic = () => {
                                                 <p className='capitalize font-avenirHeavy'>{`${project?.creator?.first_name} ${project?.creator?.last_name}`}</p>
                                             </div>
                                         </div>
-                                        
-                                            <div className='flex gap-2 justify-end'>
-                                                <div className='lg:hidden'>
-                                                    <ButtonPrimaryIcon  handleClick={()=>{setTranslate(true)}} bgColor={"bg-brandSec500"}  text={" "} gap={"gap-0"} icon={<FaMessage className='text-xl' />} paddingX={"px-4"} />
-                                                </div>
-                                                   {
-                                                    isAdmin
-                                                    &&
-                                                        <ButtonPrimaryIcon bgColor={"bg-brandSec500"} text={"Add Task"} handleClick={() => setIsOpen(true)} />
-                                                    }
+
+                                        <div className='flex gap-2 justify-end'>
+                                            <div className='lg:hidden'>
+                                                <ButtonPrimaryIcon handleClick={() => { setTranslate(true) }} bgColor={"bg-brandSec500"} text={" "} gap={"gap-0"} icon={<FaMessage className='text-xl' />} paddingX={"px-4"} />
                                             </div>
+                                            {
+                                                isAdmin
+                                                &&
+                                                <ButtonPrimaryIcon bgColor={"bg-brandSec500"} text={"Add Task"} handleClick={() => setIsOpen(true)} />
+                                            }
+                                        </div>
 
                                         <div className={`border-b-0.5 border-b-brandBlue1x/20 grid pt-8`}>
                                             <div className='overflow-x-auto flex flex-row'>
@@ -128,8 +128,8 @@ const ProjectDynamic = () => {
                                                             <button onClick={() => setCurrentTab(tab.id)} className={`flex flex-row items-center gap-2 py-2 px-6 whitespace-nowrap rounded-full ${currentTab == tab.id ? "bg-brandBlue1x text-white" : (tab.canView == "admin" && !isAdmin) ? "text-brandGray4x/50 pointer-events-none" : ""} transition-all duration-300 ease-in-out`}>
                                                                 {tab.name}
                                                                 {(tab.canView == "admin" && !isAdmin)
-                                                                &&
-                                                                <FaLock className={`text-brandGray4x/50`} />
+                                                                    &&
+                                                                    <FaLock className={`text-brandGray4x/50`} />
                                                                 }
                                                             </button>
                                                         </div>
@@ -146,16 +146,29 @@ const ProjectDynamic = () => {
                                 })
                             }
                         </div>
-                        <div className='transition-all duration-300 ease-in-out min-w-full w-full  col-span-1 bg-brandSec500 h-screen lg:sticky top-0 right-0 py-8 px-4 max-h-screen'>
+                        <div className='flex flex-col justify-between transition-all duration-300 ease-in-out min-w-full w-full  col-span-1 bg-brandSec500 h-fit min-h-410 lg:sticky top-0 right-0 pt-8 pb-4 px-4 max-h-screen'>
+                            <div>
                             <div className='flex flex-row gap-4 items-start'>
-                                <button onClick={()=>setTranslate(false)} title='Back to project' aria-label='Back to project' type='button'
-                                className={`lg:hidden text-white pt-1 hover:translate-x-2 transition-all duration-300 ease-in-out`}>
+                                <button onClick={() => setTranslate(false)} title='Back to project' aria-label='Back to project' type='button'
+                                    className={`lg:hidden text-white pt-1 hover:translate-x-2 transition-all duration-300 ease-in-out`}>
                                     <span className='sr-only'>
                                         Back to project
                                     </span>
                                     <FaChevronLeft className='text-xl' />
                                 </button>
-                                <HeaderAndText textColor="text-white" header={"Messages"} subHeader={" "}  hasNoButton />
+                                <HeaderAndText textColor="text-white" header={"Messages"} subHeader={" "} hasNoButton />
+                            </div>
+                            <div className={`min-h-full py-28 justify-center bg-white flex flex-col gap-2 items-center text-brandSec500 rounded-ten w-full`}>
+                                <FaPlus className='text-brandBlue1x text-2xl' />
+                                <p className={`text-xs`}>
+                                    No messages yet
+                                </p>
+                            </div>
+                            </div>
+                            <div className={`flex p-4 w-full bg-white rounded-full mb-0 justify-self-end`}>
+                                <label>
+
+                                </label>
                             </div>
                         </div>
                     </div>

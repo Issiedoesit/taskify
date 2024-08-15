@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import Progress from '../Sections/Progress'
 import { NavLink } from 'react-router-dom'
+import { Avatar } from '@mantine/core'
 
 const TaskCardWrap = ({ taskImg, name, link, description, creator, members, date, maxWidth, hideDue }) => {
 
-    const [stackedPics, setStackedPics] = useState(3)
+    const [stackedPics, setStackedPics] = useState(2)
 
     return (
         <NavLink to={link} className={`w-full rounded-ten shadow-md ${maxWidth ? maxWidth : "md:max-w-xs"}`}>
@@ -51,19 +52,19 @@ const TaskCardWrap = ({ taskImg, name, link, description, creator, members, date
                     {
                         creator?.profile_photo
                             ?
-                            <div className={`flex items-center`}>
-                                {
-                                    members.slice(0, stackedPics)?.map((member, i) => {
-                                        return <img key={i} style={{ transform: `translateX(${-(i * 16)}px)` }} src={member?.user?.profile_photo} className='skeleton--white rounded-full w-10 shadow-md aspect-square' />
-                                    })
-                                }
-                                {
-                                    members.length > stackedPics
+                            <div className={`flex w-full items-center justify-end`}>
+
+                                <Avatar.Group className=''>
+                                    {
+                                        members.slice(0, stackedPics)?.map((member, i) => {
+                                            return <Avatar key={i} src={member?.user?.profile_photo} />
+                                        })
+                                    }
+                                    { members.length > stackedPics
                                     &&
-                                    <div style={{ transform: `translateX(${-(stackedPics * 16)}px)` }}  className='w-10 p-1 outline-1.5 outline-brandBlue3x aspect-square flex items-center justify-center rounded-full bg-white'>
-                                        <p className='text-sm'>+{members.length - stackedPics} </p>
-                                    </div>
-                                }
+                                    <Avatar>+{members.length - stackedPics}</Avatar>
+                                    }
+                                </Avatar.Group>
                             </div>
                             :
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -60,8 +60,8 @@ const AltAuthTemplate = ({id, children, tip, altAction, altActionCentered, altAc
                         </defs>
                     </svg>
                     <div>
-                        <h2 className='text-xl font-avenirHeavy text-brandBlack1x'>Get started quickly</h2>
-                        <p className='font-avenirBook text-brandGray6x text-sm lg:text-base'>Integrate with developer-friendly APIs or choose low-code or pre-built solutions.</p>
+                        <h2 className='text-xl font-avenirHeavy text-brandBlack1x'>Streamline Your Workflow</h2>
+                        <p className='font-avenirBook text-brandGray6x text-sm lg:text-base'>Get started quickly with intuitive task management and real-time collaboration features.</p>
                     </div>
                 </div>
                 <div className='flex gap-3 py-4'>
@@ -76,8 +76,8 @@ const AltAuthTemplate = ({id, children, tip, altAction, altActionCentered, altAc
                         </defs>
                     </svg>
                     <div>
-                        <h2 className='text-xl font-avenirHeavy text-brandBlack1x'>Support any business model</h2>
-                        <p className='font-avenirBook text-brandGray6x text-sm lg:text-base'>E-commerce, subscriptions, SaaS platforms, marketplaces, and more—all within a unified platform.</p>
+                        <h2 className='text-xl font-avenirHeavy text-brandBlack1x'>Flexible Project Structures</h2>
+                        <p className='font-avenirBook text-brandGray6x text-sm lg:text-base'>Track milestones, manage resources, and adjust plans seamlessly.</p>
                     </div>
                 </div>
                 <div className='flex gap-3 py-4'>
@@ -92,8 +92,8 @@ const AltAuthTemplate = ({id, children, tip, altAction, altActionCentered, altAc
                         </defs>
                     </svg>
                     <div>
-                        <h2 className='text-xl font-avenirHeavy text-brandBlack1x'>Join millions of businesses</h2>
-                        <p className='font-avenirBook text-brandGray6x text-sm lg:text-base'>Pandascrow is trusted by ambitious startups and enterprises of every size.</p>
+                        <h2 className='text-xl font-avenirHeavy text-brandBlack1x'>Empower Your Team</h2>
+                        <p className='font-avenirBook text-brandGray6x text-sm lg:text-base'>Taskify helps teams of all sizes stay organized, on track, and efficient.</p>
                     </div>
                 </div>
             </div>

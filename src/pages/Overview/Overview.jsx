@@ -8,6 +8,7 @@ import useGetUser from '../../utils/useGetUser'
 import axios from 'axios'
 import useSWR from 'swr'
 import PageLoaderNoNav from '../../components/Loaders/PageLoaderNoNav'
+import { PieChart } from 'react-minimal-pie-chart'
 
 const Overview = () => {
 
@@ -19,9 +20,20 @@ const Overview = () => {
 
     const { data: project, error, isLoading, mutate } = useSWR(import.meta.env.VITE_BASEURL + `/project`, fetcher, { refreshInterval: 200 })
 
+    const { data: analytics, error: analyticsError, isLoading: analyticsLoading, mutate: analyticsMutate } = useSWR(import.meta.env.VITE_BASEURL + `/dashboard`, fetcher, { refreshInterval: 200 })
 
     // !isLoading && project?.data && console.log(project)
-    !isLoading && project?.data && console.log(project.data)
+    // !isLoading && project?.data && console.log(project.data)
+    !analyticsLoading && analytics?.data && console.log(analytics.data?.data?.task_data)
+
+    const analyticsData = analytics?.data?.data || []
+
+    const chartData = [
+        { title: 'Pending', value: analyticsData?.task_data?.total_number_of_pending_task, color: '#D86417' },
+        { title: 'In Progress', value: analyticsData?.task_data?.total_number_of_in_progress_task, color: '#FFF20D' },
+        { title: 'Completed', value: analyticsData?.task_data?.total_number_of_completed_task, color: '#26B315' },
+    ]
+
 
     const projectData = project?.data?.data || []
 
@@ -35,16 +47,50 @@ const Overview = () => {
                     <CardWrap width={"w-full"}>
                         <p className={`text-xl text-white font-avenirMedium`}>Running Task</p>
                         <div className='text-4xl font-avenirHeavy'>
-                            <p>65</p>
+                            <p>{analyticsData?.task_data?.total_number_of_in_progress_task}</p>
                         </div>
                         <div className='pt-4 flex flex-row items-center gap-6'>
-                            <div className={`w-32 rounded-full bg-brandBlue1x aspect-square`}>
+                            <div className='flex flex-col gap-4'>
+                                {
+                                    !analyticsData
+                                        ?
+                                        <div className={`w-32 ${analyticsLoading && "skeleton--white"} rounded-full bg-brandBlue1x aspect-square`}>
+
+                                        </div>
+                                        :
+                                        <PieChart lineWidth={12} paddingAngle={10} rounded={3.5} data={chartData} />
+                                }
 
                             </div>
                             <div className={`flex flex-col gap-1 text-left`}>
-                                <p className={`text-2xl font-avenirHeavy`}>100</p>
-                                <p className='text-lg'>Task</p>
+                                <p className={`text-2xl font-avenirHeavy`}>{analyticsData?.task_data?.total_number_of_task}</p>
+                                <p className='text-lg'>Total Task</p>
                             </div>
+                        </div>
+                        <div className='text-xxs gap-1'>
+                        {
+                                    !analyticsData
+                                        ?
+                                        <div className={`w-32 ${analyticsLoading && "skeleton--white"} rounded-full bg-brandBlue1x aspect-square`}>
+
+                                        </div>
+                                        :
+                                        <div className={`grid grid-cols-3 gap-2 items-center`}>
+                                            {
+                                                chartData.map((data, i)=>{
+                                                    return <div className='flex flex-row gap-3 items-center'>
+                                                        <div style={{backgroundColor:data.color}} className='w-3 rounded-full aspect-square' >
+
+                                                        </div>
+                                                        <div>
+                                                        <p>{data.value}</p>
+                                                        <p>{data.title}</p>
+                                                        </div>
+                                                    </div>
+                                                })
+                                            }
+                                        </div>
+                                }
                         </div>
                     </CardWrap>
                     <CardWrap width={"w-full"} colSpan={"col-span-2"} bgColor={"bg-brandDashGray2x"} textColor={"text-brandSec500"} >
@@ -69,7 +115,7 @@ const Overview = () => {
                     <div className={`flex flex-row gap-8 w-full`}>
                         <div className={`w-full grid md:grid-cols-2 lg:grid-cols-3 gap-y-8 md:gap-x-8`}>
                             {
-                                projectData.slice(0,3).map((project, idx) => {
+                                projectData.slice(0, 3).map((project, idx) => {
                                     return <TaskCardWrap key={idx} link={`projects/${project.project_id}`} creator={project.creator} members={project.users} taskImg={project.project_photo} name={project.name} description={project.description} hideDue />
                                 })
                             }
