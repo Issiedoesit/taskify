@@ -52,6 +52,11 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId }) => {
         })
     })
 
+    const clearForm = () => {
+        formik.resetForm()
+        setStep(0)
+    }
+
     const handleProjectCreate = (e) => {
         e.preventDefault()
         if (formik.errors.title || formik.errors.description) {
@@ -97,7 +102,7 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId }) => {
                             autoClose: 2500,
                         });
 
-
+                        clearForm()
                         setIsOpen(false)
 
                         setSubmitting(false)
