@@ -22,8 +22,8 @@ const TaskStatusWrap = ({ status, data, cardBgColor }) => {
                     <FaChevronUp className={`text-brandSec500 ${!open ? "" : "rotate-180"} transition-all duration-300 ease-in-out`} />
                 </div>
             </div>
-            <div className={`${!open ? "py-2 gap-8" : "h-0 opacity-0 collapse pointer-events-none overflow-hidden"} transition-all duration-300 ease-in-out`}>
-                <div className={`grid grid-cols-1 auto-cols-fr auto-rows-fr`}>
+            <div className={`${!open ? "py-2" : "h-0 opacity-0 collapse pointer-events-none overflow-hidden"} transition-all duration-300 ease-in-out`}>
+                <div className={`grid grid-cols-1 auto-cols-fr auto-rows-fr gap-8`}>
                     {
                         data?.length == 0
                             ?
