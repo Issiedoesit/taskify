@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ModalWrap from '../../../components/Modal/ModalWrap'
 import ModalInner from '../../../components/Modal/ModalInner'
 import { FaTrashAlt, FaEdit } from 'react-icons/fa'
@@ -9,9 +9,14 @@ import formatDateMonthText from '../../../utils/formatDateMonthText'
 const ViewTask = ({ isOpen, setIsOpen, taskData, users, isAdmin, isAssignee, mutate }) => {
 
     const { user } = useGetUser()
+    const [confirmDelete, setConfirmDelete] = useState(false)
 
 
     // console.log(taskData)
+
+    const deleteTask = () => {
+
+    }
 
     return (
         <ModalWrap id={"viewTaskModal"} modalState={isOpen} handleModal={() => setIsOpen(false)} >

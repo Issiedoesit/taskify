@@ -1,13 +1,38 @@
-import React from 'react'
+import React, { useState } from 'react'
 import DashTemplate from '../../components/Wraps/DashTemplate'
 import UserImgHeader from '../../components/Sections/UserImgHeader'
 import CardWrap from '../../components/Wraps/CardWrap'
+import TaskStatusWrap from './TasksDisplay.jsx/TaskStatusWrap'
+import useGetUser from '../../utils/useGetUser'
+import axios from 'axios'
+import useSWR from 'swr'
+import useLoadMore from '../../utils/useLoadMore'
+import PageLoaderNoNav from '../../components/Loaders/PageLoaderNoNav'
 
 const Task = () => {
+
+    const { user, token } = useGetUser()
+    // const [isOpen, setIsOpen] = useState(false)
+
+    const fetcher = async (url) => axios.get(url, { headers: { Authorization: `Bearer ${token}` } })
+
+    const { data: project, error, isLoading, mutate } = useSWR(import.meta.env.VITE_BASEURL + `/project`, fetcher, { refreshInterval: 200 })
+
+
+    // !isLoading && project?.data && console.log(project)
+    // !isLoading && project?.data && console.log(project.data)
+
+    const projectData = project?.data?.data || []
+
+    const {slicedDataRows, moreRows, rows, rowsPerView} = useLoadMore(projectData, 2)
+
+
+    if (isLoading) return <DashTemplate><PageLoaderNoNav /></DashTemplate>
+
     return (
         <DashTemplate>
             <UserImgHeader subHeader={"Manage your tasks!"} />
-            <div className={`h-full pt-10 flex flex-col gap-10`}>
+            <div className={`pt-10 flex flex-col gap-10`}>
                 <div className={`grid grid-cols-1 md:grid-cols-3 gap-y-8 lg:gap-10`}>
                     <div className={`flex flex-col xxl:flex-row items-center my-auto gap-4 h-fit`}>
                     <CardWrap width={"w-full"}>
@@ -66,6 +91,15 @@ const Task = () => {
                         </div>
                     </CardWrap>
                 </div>
+            </div>
+            <div className='py-8'>
+                Search Bar ...
+            </div>
+
+            <div className={`grid lg:grid-cols-3 pb-20 gap-8`}>
+                <TaskStatusWrap />
+                <TaskStatusWrap status={"In Progress"} />
+                <TaskStatusWrap status={"Completed"} />
             </div>
         </DashTemplate>
     )
