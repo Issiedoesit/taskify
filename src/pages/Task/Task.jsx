@@ -16,15 +16,20 @@ const Task = () => {
 
     const fetcher = async (url) => axios.get(url, { headers: { Authorization: `Bearer ${token}` } })
 
-    const { data: project, error, isLoading, mutate } = useSWR(import.meta.env.VITE_BASEURL + `/project`, fetcher, { refreshInterval: 200 })
+    const { data: task, error, isLoading, mutate } = useSWR(import.meta.env.VITE_BASEURL + `/task`, fetcher, { refreshInterval: 200 })
 
 
-    // !isLoading && project?.data && console.log(project)
-    // !isLoading && project?.data && console.log(project.data)
+    // !isLoading && task?.data && console.log(task)
+    // !isLoading && task?.data && console.log(task.data)
 
-    const projectData = project?.data?.data || []
+    const taskData = task?.data?.data || []
 
-    const {slicedDataRows, moreRows, rows, rowsPerView} = useLoadMore(projectData, 2)
+    const pendingTasks = taskData?.filter((task => task.status == "pending"))
+    const inProgressTasks = taskData?.filter((task => task.status == "in progress"))
+    const completedTasks = taskData?.filter((task => task.status == "completed"))
+    console.log(pendingTasks)
+
+    const {slicedDataRows, moreRows, rows, rowsPerView} = useLoadMore(taskData, 2)
 
 
     if (isLoading) return <DashTemplate><PageLoaderNoNav /></DashTemplate>
@@ -35,46 +40,66 @@ const Task = () => {
             <div className={`pt-10 flex flex-col gap-10`}>
                 <div className={`grid grid-cols-1 md:grid-cols-3 gap-y-8 lg:gap-10`}>
                     <div className={`flex flex-col xxl:flex-row items-center my-auto gap-4 h-fit`}>
-                    <CardWrap width={"w-full"}>
-                        {/* <p className={`text-xl text-white font-avenirMedium`}>Running Task</p> */}
-                        <div className='pt-4 flex flex-row items-center gap-6'>
-                            <div className={`p-2 rounded-full bg-brandBlue1x aspect-square`}>
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M21.93 6.76001L18.56 20.29C18.32 21.3 17.42 22 16.38 22H3.24001C1.73001 22 0.650023 20.5199 1.10002 19.0699L5.31001 5.55005C5.60001 4.61005 6.47003 3.95996 7.45003 3.95996H19.75C20.7 3.95996 21.49 4.53997 21.82 5.33997C22.01 5.76997 22.05 6.26001 21.93 6.76001Z" stroke="#FFFFFF" stroke-width="1.5" stroke-miterlimit="10" />
-                                    <path d="M16 22H20.78C22.07 22 23.08 20.91 22.99 19.62L22 6" stroke="#FFFFFF" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M9.67999 6.38L10.72 2.06006" stroke="#FFFFFF" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M16.38 6.39001L17.32 2.05005" stroke="#FFFFFF" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M7.70001 12H15.7" stroke="#FFFFFF" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M6.70001 16H14.7" stroke="#FFFFFF" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
+                        <CardWrap width={"w-full"}>
+                            {/* <p className={`text-xl text-white font-avenirMedium`}>Running Task</p> */}
+                            <div className='pt-4 flex flex-row items-center gap-6'>
+                                <div className={`p-2 rounded-full bg-brandBlue1x aspect-square`}>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M21.93 6.76001L18.56 20.29C18.32 21.3 17.42 22 16.38 22H3.24001C1.73001 22 0.650023 20.5199 1.10002 19.0699L5.31001 5.55005C5.60001 4.61005 6.47003 3.95996 7.45003 3.95996H19.75C20.7 3.95996 21.49 4.53997 21.82 5.33997C22.01 5.76997 22.05 6.26001 21.93 6.76001Z" stroke="#FFFFFF" stroke-width="1.5" stroke-miterlimit="10" />
+                                        <path d="M16 22H20.78C22.07 22 23.08 20.91 22.99 19.62L22 6" stroke="#FFFFFF" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M9.67999 6.38L10.72 2.06006" stroke="#FFFFFF" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M16.38 6.39001L17.32 2.05005" stroke="#FFFFFF" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M7.70001 12H15.7" stroke="#FFFFFF" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M6.70001 16H14.7" stroke="#FFFFFF" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
 
+                                </div>
+                                <div className={`flex flex-col gap-1 text-left`}>
+                                    <p className={`text-2xl font-avenirHeavy`}>{pendingTasks?.length}</p>
+                                    <p className='text-lg'>Pending tasks</p>
+                                </div>
                             </div>
-                            <div className={`flex flex-col gap-1 text-left`}>
-                                <p className={`text-2xl font-avenirHeavy`}>40</p>
-                                <p className='text-lg'>Pending tasks</p>
-                            </div>
-                        </div>
-                    </CardWrap>
-                    <CardWrap width={"w-full"} bgColor={"bg-brandBlue1x"} >
-                        {/* <p className={`text-xl text-white font-avenirMedium`}>Running Task</p> */}
-                        <div className='pt-4 flex flex-row items-center gap-6'>
-                            <div className={`p-2 rounded-full bg-white aspect-square`}>
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M21.93 6.76001L18.56 20.29C18.32 21.3 17.42 22 16.38 22H3.24001C1.73001 22 0.650023 20.5199 1.10002 19.0699L5.31001 5.55005C5.60001 4.61005 6.47003 3.95996 7.45003 3.95996H19.75C20.7 3.95996 21.49 4.53997 21.82 5.33997C22.01 5.76997 22.05 6.26001 21.93 6.76001Z" stroke="#141522" stroke-width="1.5" stroke-miterlimit="10" />
-                                    <path d="M16 22H20.78C22.07 22 23.08 20.91 22.99 19.62L22 6" stroke="#141522" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M9.67999 6.38L10.72 2.06006" stroke="#141522" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M16.38 6.39001L17.32 2.05005" stroke="#141522" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M7.70001 12H15.7" stroke="#141522" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M6.70001 16H14.7" stroke="#141522" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
+                        </CardWrap>
+                        <CardWrap width={"w-full"} bgColor={"bg-brandSec500/50"} >
+                            {/* <p className={`text-xl text-white font-avenirMedium`}>Running Task</p> */}
+                            <div className='pt-4 flex flex-row items-center gap-6'>
+                                <div className={`p-2 rounded-full bg-white aspect-square`}>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M21.93 6.76001L18.56 20.29C18.32 21.3 17.42 22 16.38 22H3.24001C1.73001 22 0.650023 20.5199 1.10002 19.0699L5.31001 5.55005C5.60001 4.61005 6.47003 3.95996 7.45003 3.95996H19.75C20.7 3.95996 21.49 4.53997 21.82 5.33997C22.01 5.76997 22.05 6.26001 21.93 6.76001Z" stroke="#141522" stroke-width="1.5" stroke-miterlimit="10" />
+                                        <path d="M16 22H20.78C22.07 22 23.08 20.91 22.99 19.62L22 6" stroke="#141522" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M9.67999 6.38L10.72 2.06006" stroke="#141522" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M16.38 6.39001L17.32 2.05005" stroke="#141522" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M7.70001 12H15.7" stroke="#141522" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M6.70001 16H14.7" stroke="#141522" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
 
+                                </div>
+                                <div className={`flex flex-col gap-1 text-left`}>
+                                    <p className={`text-2xl font-avenirHeavy`}>{inProgressTasks?.length}</p>
+                                    <p className='text-lg'>In Progress tasks</p>
+                                </div>
                             </div>
-                            <div className={`flex flex-col gap-1 text-left`}>
-                                <p className={`text-2xl font-avenirHeavy`}>25</p>
-                                <p className='text-lg'>Completed tasks</p>
+                        </CardWrap>
+                        <CardWrap width={"w-full"} bgColor={"bg-brandBlue1x"} >
+                            {/* <p className={`text-xl text-white font-avenirMedium`}>Running Task</p> */}
+                            <div className='pt-4 flex flex-row items-center gap-6'>
+                                <div className={`p-2 rounded-full bg-white aspect-square`}>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M21.93 6.76001L18.56 20.29C18.32 21.3 17.42 22 16.38 22H3.24001C1.73001 22 0.650023 20.5199 1.10002 19.0699L5.31001 5.55005C5.60001 4.61005 6.47003 3.95996 7.45003 3.95996H19.75C20.7 3.95996 21.49 4.53997 21.82 5.33997C22.01 5.76997 22.05 6.26001 21.93 6.76001Z" stroke="#141522" stroke-width="1.5" stroke-miterlimit="10" />
+                                        <path d="M16 22H20.78C22.07 22 23.08 20.91 22.99 19.62L22 6" stroke="#141522" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M9.67999 6.38L10.72 2.06006" stroke="#141522" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M16.38 6.39001L17.32 2.05005" stroke="#141522" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M7.70001 12H15.7" stroke="#141522" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M6.70001 16H14.7" stroke="#141522" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+
+                                </div>
+                                <div className={`flex flex-col gap-1 text-left`}>
+                                    <p className={`text-2xl font-avenirHeavy`}>{completedTasks?.length}</p>
+                                    <p className='text-lg'>Completed tasks</p>
+                                </div>
                             </div>
-                        </div>
-                    </CardWrap>
+                        </CardWrap>
                     </div>
                     <CardWrap width={"w-full"} colSpan={"col-span-2"} bgColor={"bg-brandDashGray2x"} textColor={"text-brandSec500"} >
                         <div className='flex flex-row gap-2 justify-between'>
@@ -97,9 +122,9 @@ const Task = () => {
             </div>
 
             <div className={`grid lg:grid-cols-3 pb-20 gap-8`}>
-                <TaskStatusWrap />
-                <TaskStatusWrap status={"In Progress"} />
-                <TaskStatusWrap status={"Completed"} />
+                <TaskStatusWrap cardBgColor={"bg-brandOrange2x/20"} data={pendingTasks} />
+                <TaskStatusWrap status={"In Progress"} cardBgColor={"bg-brandYellow4x/10"} data={inProgressTasks} />
+                <TaskStatusWrap status={"Completed"} cardBgColor={"bg-brandGreen4x/10"} data={completedTasks}  />
             </div>
         </DashTemplate>
     )

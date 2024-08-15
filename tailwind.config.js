@@ -109,6 +109,7 @@ export default {
         brandYellow1x: "#B79C3B",
         brandYellow2x: "#7D5921",
         brandYellow3x: "#DDB72F",
+        brandYellow4x: "#FFF20D",
         brandDarkViolet1x: "#2A2AB2",
         brandWhite1x: "#F9F9FB",
         brandPeach1x: "#FFF5E5",

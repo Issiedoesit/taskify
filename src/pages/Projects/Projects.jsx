@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import DashTemplate from '../../components/Wraps/DashTemplate'
 import UserImgHeader from '../../components/Sections/UserImgHeader'
 import CardWrap from '../../components/Wraps/CardWrap'
@@ -12,6 +12,8 @@ import LoadMore from '../../components/Pagination/LoadMore'
 import CreateProject from './CreateProject'
 import { ToastContainer } from 'react-toastify'
 import useLoadMore from '../../utils/useLoadMore'
+import Paginator from '../../components/Pagination/Paginator'
+import usePagination from '../../utils/usePagination'
 
 const Projects = () => {
 
@@ -28,8 +30,12 @@ const Projects = () => {
 
     const projectData = project?.data?.data || []
 
-    const {slicedDataRows, moreRows, rows, rowsPerView} = useLoadMore(projectData, 2)
+    // const {slicedDataRows, moreRows, rows, rowsPerView} = useLoadMore(projectData, 2)
+    const {currentPage, templates, loading, rows:paginatorRows, totalPages, dottedArray, movePageBy, paginate, displayedData} = usePagination(projectData, 5, "projectTableDisplay")
 
+    // useLayoutEffect(()=>{
+    //     paginate()
+    // }, [projectData])
 
     if (isLoading) return <DashTemplate><PageLoaderNoNav /></DashTemplate>
 
@@ -97,14 +103,16 @@ const Projects = () => {
                         </CardWrap>
                     </div>
 
-                    <div className={`flex flex-col gap-8 w-full`}>
+                    <div id="projectTableDisplay" className={`flex flex-col gap-8 w-full`}>
                         <HeaderAndText handleClick={() => setIsOpen(true)} header={"Projects"} subHeader={"A glimpse into your projects"} buttonText={"New Project"} />
                         <div className={`w-full overflow-x-auto`}>
-                            <ProjectTable data={slicedDataRows} />
+                            <ProjectTable data={displayedData} />
+                            {/* <ProjectTable data={slicedDataRows} /> */}
                         </div>
                         <div className='pt-4'>
-                            {projectData.length > rowsPerView && <LoadMore rows_per_view={rowsPerView} moreRows={moreRows} rows={rows} listLength={projectData.length} />}
-
+                            {/* {projectData.length > rowsPerView && <LoadMore rows_per_view={rowsPerView} moreRows={moreRows} rows={rows} listLength={projectData.length} />} */}
+                            
+                            {!isLoading && projectData && <Paginator currentPage={currentPage} totalPages={totalPages} dottedArray={dottedArray} movePageBy={movePageBy} paginate={paginate} />}
                         </div>
                     </div>
                 </div>
