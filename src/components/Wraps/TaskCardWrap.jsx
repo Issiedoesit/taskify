@@ -4,17 +4,24 @@ import { NavLink } from 'react-router-dom'
 import { Avatar, Tooltip } from '@mantine/core'
 import UserImg from '../Sections/UserImg'
 
-const TaskCardWrap = ({ taskImg, name, link, description, creator, members, date, maxWidth, hideDue }) => {
+const TaskCardWrap = ({ projectImg, name, project, link, description, creator, members, date, maxWidth, hideDue }) => {
 
     const [stackedPics, setStackedPics] = useState(2)
+
+    console.log(project)
+
+
+    const total = project?.tasks?.length
+    const completed = project?.tasks?.filter(task => task.status == "completed").length
+    const percent = (completed/total) * 100
 
     return (
         <NavLink to={link} className={`w-full rounded-ten shadow-md ${maxWidth ? maxWidth : "md:max-w-xs"}`}>
 
             {
-                taskImg
+                projectImg
                     ?
-                    <img src={taskImg} alt={name} className={`h-40 skeleton--white w-full object-cover rounded-t-ten`} />
+                    <img src={projectImg} alt={name} className={`h-40 skeleton--white w-full object-cover rounded-t-ten`} />
                     :
                     <div className={`h-40 rounded-t-ten bg-brandLightBlue1x w-full flex items-center justify-center p-6`}>
                         <svg className={`h-20 w-20 opacity-20`} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -35,7 +42,7 @@ const TaskCardWrap = ({ taskImg, name, link, description, creator, members, date
                     <p className={`text-brandBlue1x font-avenirMedium capitalize`}>{`${creator.first_name} ${creator.last_name}` || "Jim Create"}</p>
                     <UserImg src={creator?.profile_photo} width={"w-8"} />
                 </div>
-                <Progress />
+                <Progress completed={completed} total={total} percent={percent} />
             </div>
             <div className={`flex flex-col gap-1 px-4 pb-4`}>
                 <div className={`flex flex-row gap-8 items-center`}>

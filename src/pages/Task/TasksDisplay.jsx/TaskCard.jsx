@@ -10,7 +10,7 @@ import { NavLink } from 'react-router-dom'
 
 const TaskCard = ({ members, status, project, taskName, projectId, taskStart, taskDue, priority, tags, bgColor }) => {
     
-    const [stackedPics, setStackedPics] = useState(3)
+    const [stackedPics, setStackedPics] = useState(2)
     
     return (
         <div className={`py-6 px-4  ${bgColor ? bgColor : "bg-white"} rounded-ten flex flex-col gap-8 shadow-md`}>

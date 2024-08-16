@@ -119,7 +119,7 @@ const Overview = () => {
                             <div className={`w-full grid md:grid-cols-2 lg:grid-cols-3 gap-y-8 md:gap-x-8`}>
                                 {
                                     projectData.slice(0, 3).map((project, idx) => {
-                                        return <TaskCardWrap key={idx} link={`projects/${project.project_id}`} creator={project.creator} members={project.users} taskImg={project.project_photo} name={project.name} description={project.description} hideDue />
+                                        return <TaskCardWrap key={idx} link={`projects/${project.project_id}`} project={project} creator={project.creator} members={project.users} projectImg={project.project_photo} name={project.name} description={project.description} hideDue />
                                     })
                                 }
                             </div>
