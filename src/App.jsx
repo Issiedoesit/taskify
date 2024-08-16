@@ -14,6 +14,7 @@ import Messages from './pages/Messages/Messages'
 import Deadline from './pages/Deadline/Deadline'
 import Settings from './pages/Settings/Settings'
 import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
 
 import { MantineProvider } from '@mantine/core';
 

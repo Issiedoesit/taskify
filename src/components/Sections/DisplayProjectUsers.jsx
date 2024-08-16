@@ -5,23 +5,20 @@ import useSWR from 'swr'
 import PageLoaderNoNav from '../Loaders/PageLoaderNoNav'
 import UserImg from "./UserImg"
 
-const DisplayAllUsers = ({ selectId, setSelectId, height, useInProject, projectMembers }) => {
+const DisplayProjectUsers = ({ selectId, setSelectId, height, useInProject, projectMembers, users }) => {
     const { token } = useGetUser();
     const [searchTerm, setSearchTerm] = useState(''); 
 
-    const fetcher = async (url) => axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
+    
+    const allUsersData = users || [];
 
-    const { data: allUsers, error, isLoading } = useSWR(import.meta.env.VITE_BASEURL + `/user/all`, fetcher, { refreshInterval: 200 });
+    // const projectMemberIds = new Set(projectMembers?.map(member => member.user.user_id));
 
-    const allUsersData = allUsers?.data?.data || [];
-
-    const projectMemberIds = new Set(projectMembers?.map(member => member.user.user_id));
-
-    // Update allUsersData to include the InProject flag
-    const updatedUsers = allUsersData?.map(user => ({
-        ...user,
-        InProject: projectMemberIds.has(user.user_id)
-    }));
+    // // Update allUsersData to include the InProject flag
+    // const updatedUsers = allUsersData?.map(user => ({
+    //     ...user,
+    //     InProject: projectMemberIds.has(user.user_id)
+    // }));
 
     // altdata sample =     {
     //     assignedAt: "2024-08-12T21:35:30.608Z",
@@ -66,7 +63,7 @@ const DisplayAllUsers = ({ selectId, setSelectId, height, useInProject, projectM
         );
     }, [searchTerm, allUsersData]);
 
-    if (isLoading) return <PageLoaderNoNav padding={"py-24"} height={"h-full"} />
+    if (!users) return <PageLoaderNoNav padding={"py-24"} height={"h-full"} />
 
     return (
         <div className={`flex flex-col gap-4 py-4 relative ${height ? height : "h-full"}`}>
@@ -84,13 +81,13 @@ const DisplayAllUsers = ({ selectId, setSelectId, height, useInProject, projectM
             {filteredData?.map((user, idx) => {
                 return  <div
                     key={idx}
-                    onClick={() => setSelectId(user.user_id)}
-                    className={`${(useInProject && user.InProject) ? "pointer-events-none" : ""} ${selectId === user.user_id ? "bg-brandBlue1x/50" : "hover:bg-brandBlue1x/20"} transition-all duration-300 ease-in-out rounded-ten p-1 flex flex-row items-center gap-4`}
+                    onClick={() => setSelectId(user.user.user_id)}
+                    className={`${(useInProject && user.user.InProject) ? "pointer-events-none" : ""} ${selectId === user.user.user_id ? "bg-brandBlue1x/50" : "hover:bg-brandBlue1x/20"} transition-all duration-300 ease-in-out rounded-ten p-1 flex flex-row items-center gap-4`}
                 >
-                    <UserImg width={"w-12"} src={user.profile_photo} alt={`${user.first_name} ${user.last_name}`} />
-                    <p className='capitalize'>{`${user.first_name} ${user.last_name}`} 
+                    <UserImg width={"w-12"} src={user.user.profile_photo} alt={`${user.user.first_name} ${user.user.last_name}`} />
+                    <p className='capitalize'>{`${user.user.first_name} ${user.user.last_name}`} 
                     {
-                        (useInProject && user.InProject)
+                        (useInProject && user.user.InProject)
                         &&
                         <span className='text-brandGreen4x text-xxs pl-1'>Added</span>
                     }
@@ -101,4 +98,4 @@ const DisplayAllUsers = ({ selectId, setSelectId, height, useInProject, projectM
     );
 };
 
-export default DisplayAllUsers;
+export default DisplayProjectUsers;

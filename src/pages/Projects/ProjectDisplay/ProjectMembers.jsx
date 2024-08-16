@@ -1,5 +1,6 @@
 import React from 'react'
 import useGetUser from '../../../utils/useGetUser'
+import UserImg from '../../../components/Sections/UserImg'
 
 const ProjectMembers = ({users, creator, isAdmin}) => {
 
@@ -14,7 +15,7 @@ const ProjectMembers = ({users, creator, isAdmin}) => {
                 {
                     users?.map((user, idx) => {
                         return <div className={`flex flex-row gap-2 items-center py-4 border-b-0.5`}>
-                            <img src={user.user.profile_photo} className={`rounded-full w-10 aspect-square`} />
+                            <UserImg width={"w-10"} src={user.user.profile_photo} alt={`${user.user.first_name} ${user.user.last_name} `} />
                             <div>
                                 <p className={`capitalize font-avenirMedium text-sm text-lexf text-brandSec500`}>{user.user.first_name} {user.user.last_name} 
                                     <span className={"text-xxs text-brandBlue3x"}> {creator.user_id == user.user.user_id && "(Creator)"}</span>

@@ -13,6 +13,7 @@ const TaskStatusWrap = ({ status, data, cardBgColor }) => {
     const { currentPage, templates, loading, rows, totalPages, dottedArray, movePageBy, paginate, displayedData } = usePagination(data, 5, `task_display_${status}_wrap`)
 
 
+    // console.log("data => ", data)
 
     return (
         <div id={`task_display_${status}_wrap`}>
@@ -34,7 +35,7 @@ const TaskStatusWrap = ({ status, data, cardBgColor }) => {
                             <>
                                 {
                                     data.map((task, idx) => {
-                                        return <TaskCard key={idx} taskName={task.title} projectId={task.project_id} project={task.project.name} taskStart={task.created_at} taskDue={task.due_date} bgColor={cardBgColor} />
+                                        return <TaskCard key={idx} members={task.project?.users} taskName={task.title} projectId={task.project_id} project={task.project.name} taskStart={task.created_at} taskDue={task.due_date} bgColor={cardBgColor} />
                                     })
                                 }
 

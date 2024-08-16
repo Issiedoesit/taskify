@@ -15,12 +15,14 @@ import ButtonPrimaryIcon from '../../components/Buttons/ButtonPrimaryIcon'
 import ViewTask from '../Task/TasksDisplay.jsx/ViewTask'
 import { FaChevronLeft, FaLock, FaPlus } from 'react-icons/fa'
 import { FaMessage } from "react-icons/fa6";
+import AddUser from './AddUser'
 
 const ProjectDynamic = () => {
 
     const [projectId, setProjectId] = useState(location.pathname.split('projects/')[1])
     const [currentTab, setCurrentTab] = useState("tasks")
     const [isOpen, setIsOpen] = useState(false)
+    const [isAddUserOpen, setIsAddUserOpen] = useState(false)
     const [isViewTaskOpen, setIsViewTaskOpen] = useState(false)
     const [currentTask, setCurrentTask] = useState([])
     const [translate, setTranslate] = useState(false)
@@ -37,10 +39,10 @@ const ProjectDynamic = () => {
     // !isLoading && project?.data && console.log(project.data)
 
     const projectData = [project?.data?.data] || []
-    // console.log(project)
+    // console.log("projectData[0].users => ", projectData?.[0]?.users)
 
     if (isLoading) return <DashTemplate><PageLoaderNoNav /></DashTemplate>
-    if (error || project.data.code == 400) return <ErrorPageNotFound page={"Projects"} link={"/projects"} message={project?.data?.message} />
+    if (error || project.data.code == 400) return <ErrorPageNotFound page={"Projects"} link={"/projects"} message={"Something went wrong"} />
 
     const isAdmin = projectData[0].users.filter(u => u.user.user_id == user.user_id)[0].role == "admin"
     const isAssignee = currentTask?.[0]?.user_id == user.user_id
@@ -109,14 +111,17 @@ const ProjectDynamic = () => {
                                             </div>
                                         </div>
 
-                                        <div className='flex gap-2 justify-end'>
+                                        <div className='flex gap-2 justify-end pt-10 pb-6'>
                                             <div className='lg:hidden'>
                                                 <ButtonPrimaryIcon handleClick={() => { setTranslate(true) }} bgColor={"bg-brandSec500"} text={" "} gap={"gap-0"} icon={<FaMessage className='text-xl' />} paddingX={"px-4"} />
                                             </div>
                                             {
                                                 isAdmin
                                                 &&
-                                                <ButtonPrimaryIcon bgColor={"bg-brandSec500"} text={"Add Task"} handleClick={() => setIsOpen(true)} />
+                                                <>
+                                                    <ButtonPrimaryIcon bgColor={"bg-brandSec500"} text={"Add Task"} handleClick={() => setIsOpen(true)} />
+                                                    <ButtonPrimaryIcon bgColor={"bg-brandSec500"} text={"Add User"} handleClick={() => setIsAddUserOpen(true)} />
+                                                </>
                                             }
                                         </div>
 
@@ -174,8 +179,9 @@ const ProjectDynamic = () => {
                     </div>
                 </div>
             </DashTemplate>
-            <ViewTask mutate={mutate} isAdmin={isAdmin} isAssignee={isAssignee} users={projectData[0].users} setIsOpen={setIsViewTaskOpen} isOpen={isViewTaskOpen} taskData={currentTask} />
-            <CreateTask setIsOpen={setIsOpen} isOpen={isOpen} mutate={mutate} projectId={projectId} />
+            <ViewTask mutate={mutate} isAdmin={isAdmin} isAssignee={isAssignee} users={projectData?.[0]?.users} setIsOpen={setIsViewTaskOpen} isOpen={isViewTaskOpen} taskData={currentTask} />
+            <AddUser projectMembers={projectData?.[0]?.users} setIsOpen={setIsAddUserOpen} isOpen={isAddUserOpen} mutate={mutate} projectId={projectId} projectName={projectData?.[0]?.name} />
+            <CreateTask users={projectData?.[0].users} setIsOpen={setIsOpen} isOpen={isOpen} mutate={mutate} projectId={projectId} />
             <ToastContainer />
         </>
     )

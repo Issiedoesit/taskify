@@ -12,13 +12,17 @@ import useGetUser from '../../utils/useGetUser'
 import AuthTextArea from '../Auth/Widgets/AuthTextArea'
 import DisplayAllUsers from '../../components/Sections/DisplayAllUsers'
 import formatDateMonthText from '../../utils/formatDateMonthText'
+import { DateTimePicker } from '@mantine/dates'
+import FormDatePicker from '../Auth/Widgets/FormDatePicker'
+import DisplayProjectUsers from '../../components/Sections/DisplayProjectUsers'
 
-const CreateTask = ({ isOpen, setIsOpen, mutate, projectId }) => {
+const CreateTask = ({ isOpen, setIsOpen, mutate, projectId, users }) => {
 
     const [submitting, setSubmitting] = useState(false)
     const [selectId, setSelectId] = useState("")
     const { token } = useGetUser()
     const [step, setStep] = useState(0)
+    const [due, setDue] = useState(new Date())
 
     // {
     //     "title":"test-title" ,
@@ -59,7 +63,7 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId }) => {
 
     const handleProjectCreate = (e) => {
         e.preventDefault()
-        if (formik.errors.title || formik.errors.description) {
+        if (formik.errors.title || formik.errors.description || !due) {
             return
         }
 
@@ -71,7 +75,7 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId }) => {
             'description': formik.values.description,
             "user_id": selectId,
             "project_id": projectId,
-            "due_date": formik.values.due_date,
+            "due_date": due,
             "notes": formik.values.notes //optional
         }
 
@@ -124,10 +128,10 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId }) => {
     const nextstep = () => {
 
         console.log(formik.errors)
-        
+
         if (formik.values.title == "" || formik.values.description == "" || formik.values.due_date == "") {
             setStep(0)
-        }else{
+        } else {
             setStep(1)
         }
         // if (formik.errors.title || formik.errors.description || formik.errors.due_date) {
@@ -145,7 +149,9 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId }) => {
                 <ModalInner title={"Create a Task"}>
                     <AuthInput inputId={"title"} inputName={"title"} inputLabel={"Title"} inputPlaceholder={"Task X"} handleChange={formik.handleChange} handleBlur={formik.handleBlur} inputValue={formik.values.title} fieldError={formik.touched.title && formik.errors.title} />
                     <AuthInput inputId={"description"} inputName={"description"} inputLabel={"Description"} inputPlaceholder={"A design file for task X space mission..."} handleChange={formik.handleChange} handleBlur={formik.handleBlur} inputValue={formik.values.description} fieldError={formik.touched.description && formik.errors.description} />
-                    <AuthInput inputType={"date"} inputId={"due_date"} inputName={"due_date"} inputLabel={"Due date"} inputPlaceholder={""} handleChange={formik.handleChange} handleBlur={formik.handleBlur} inputValue={formik.values.due_date} fieldError={formik.touched.due_date && formik.errors.due_date} />
+                    {/* <AuthInput inputType={"date"} inputId={"due_date"} inputName={"due_date"} inputLabel={"Due date"} inputPlaceholder={""} handleChange={formik.handleChange} handleBlur={formik.handleBlur} inputValue={formik.values.due_date} fieldError={formik.touched.due_date && formik.errors.due_date} /> */}
+
+                    <FormDatePicker inputId={"due_date"} inputName={"due_date"} fieldError={formik.touched.due_date && formik.errors.due_date} inputValue={due} handleChange={setDue} />
                     <AuthTextArea textAreaLabel={"Notes (Optional)"} textAreaPlaceholder={"Add a note ..."} textAreaId={"notes"} textAreaName={"notes"} handleChange={formik.handleChange} handleBlur={formik.handleBlur} textAreaValue={formik.values.notes} fieldError={formik.touched.notes && formik.errors.notes} />
                     <div className='pt-4'>
                         <ButtonPrimary disabled={submitting} disabledBgColor={"disabled:bg-brandGray16x"} width={"w-full"} text={"Assign User"} bgColor={"bg-brandBlue1x"} handleClick={nextstep} />
@@ -163,18 +169,18 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId }) => {
                                 Assign
                                 <span className={`text-brandBlue1x`}> {formik.values.title} </span>
                                 due
-                                <span className={`text-brandBlue1x`}> {`${formatDateMonthText(formik.values.due_date)}`} </span>
+                                <span className={`text-brandBlue1x`}> {`${formatDateMonthText(due)}`} </span>
                                 to:
                             </p>
                         </div>
                         {/* <div className='flex w-full h-fit bg overflow-y-auto'>
                         </div> */}
                         <div className='flex-grow grid h-full overflow-y-auto'>
-                        <DisplayAllUsers selectId={selectId} setSelectId={setSelectId} />
+                            <DisplayProjectUsers users={users} selectId={selectId} setSelectId={setSelectId} />
 
                         </div>
                         <div className='pt-6 flex flex-row gap-2'>
-                            <ButtonPrimary disabled={submitting} disabledBgColor={"disabled:bg-brandGray16x"} width={"w-full"} text={"Back"} bgColor={"bg-brandSec500"} handleClick={()=>setStep(0)} />
+                            <ButtonPrimary disabled={submitting} disabledBgColor={"disabled:bg-brandGray16x"} width={"w-full"} text={"Back"} bgColor={"bg-brandSec500"} handleClick={() => setStep(0)} />
                             <ButtonPrimary disabled={submitting} disabledBgColor={"disabled:bg-brandGray16x"} width={"w-full"} text={"Create"} bgColor={"bg-brandBlue1x"} handleClick={handleProjectCreate} />
                         </div>
                     </div>

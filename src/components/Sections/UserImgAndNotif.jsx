@@ -1,11 +1,12 @@
 import React from 'react'
 import NotificationButton from '../Buttons/NotificationButton'
+import UserImg from './UserImg'
 
 const UserImgAndNotif = ({ user }) => {
     return (
         <div className={`flex flex-row items-center gap-3`}>
             <NotificationButton />
-            <img src={user?.profile_photo} className={`skeleton--white rounded-full w-12 aspect-square`} />
+            <UserImg src={user?.profile_photo} alt={`${user?.first_name} ${user?.last_name}`} />
         </div>
     )
 }
