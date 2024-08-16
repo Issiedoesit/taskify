@@ -58,6 +58,7 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId, users }) => {
 
     const clearForm = () => {
         formik.resetForm()
+        setDue(new Date())
         setStep(0)
     }
 
@@ -69,6 +70,7 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId, users }) => {
 
         setSubmitting(true)
 
+        console.log("due => ", due)
 
         const body = {
             'title': formik.values.title,
