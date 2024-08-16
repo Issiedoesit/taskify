@@ -6,9 +6,9 @@ import usePagination from '../../utils/usePagination'
 import Paginator from '../../components/Pagination/Paginator'
 import DeadlineTemplate from './DeadlineTemplate'
 import EmptyTable from '../../components/Sections/EmptyTable'
-import { FaChevronUp } from 'react-icons/fa'
+import { FaChevronRight, FaChevronUp } from 'react-icons/fa'
 
-const DeadlineCard = ({ header, tasks, fetched, bgColor, isLoading }) => {
+const DeadlineCard = ({ header, tasks, bgColor, isLoading, openTask }) => {
 
     const [rowLength, setRowLength] = useState(3)
     const [open, setOpen] = useState(false)
@@ -56,8 +56,9 @@ const DeadlineCard = ({ header, tasks, fetched, bgColor, isLoading }) => {
                                                                     <input type='checkbox' className={`accent-brandGreen4x`} />
                                                                 </label>
                                                             </td>
-                                                            <td className='py-2 px-1'>
-                                                                <p className={`px-4 py-2 whitespace-nowrap text-brandSec500 font-avenirMedium capitalize`}>{task.title || "Sample task"}</p>
+                                                            <td onClick={()=>openTask(task)} className='py-2 flex flex-row items-center px-5 gap-1.5'>
+                                                                <p className={`py-2 whitespace-nowrap text-brandSec500 font-avenirMedium capitalize`}>{task.title || "Sample task"}</p>
+                                                                <FaChevronRight className='text-brandSec500'  />
                                                             </td>
                                                             <td className='py-2 px-1'>
                                                                 <p className={`px-4 py-2 whitespace-nowrap text-brandSec500 font-avenirMedium capitalize`}>{formatDateMonthText(task.due_date) || "January 11, 1999"}</p>

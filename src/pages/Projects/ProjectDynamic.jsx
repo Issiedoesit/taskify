@@ -81,11 +81,11 @@ const ProjectDynamic = () => {
 
                 <div className='relative lg:static w-full overflow-hidden lg:overflow-visible'>
                     <div className={`flex ${translate ? "h-screen lg:h-full" : ""} lg:grid lg:grid-cols-3 lg:gap-10 h-full pt-10 w-full lg:w-full transition-transform duration-300 ease-in-out ${translate ? "-translate-x-hundredPercent lg:translate-x-0" : ""}`}>
-                        <div className={`min-w-full flex flex-col gap-4 md:col-span-2 w-full`}>
+                        <div className={`min-w-full md:col-span-2 w-full`}>
                             {
                                 projectData?.map((project, idx) => {
-                                    return <>
-                                        <div key={idx} className='w-full rounded-ten'>
+                                    return <div key={idx} className='lfex flex-col gap-4 w-full'>
+                                        <div className='w-full rounded-ten'>
                                             {
                                                 project.project_photo
                                                     ?
@@ -93,8 +93,8 @@ const ProjectDynamic = () => {
                                                     :
                                                     <div className={`h-60 rounded-ten bg-brandLightBlue1x w-full flex items-center justify-center p-6`}>
                                                         <svg className={`h-20 w-20 opacity-20`} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M21.6799 16.9599L18.5499 9.64988C17.4899 7.16988 15.5399 7.06988 14.2299 9.42988L12.3399 12.8399C11.3799 14.5699 9.58993 14.7199 8.34993 13.1699L8.12993 12.8899C6.83993 11.2699 5.01993 11.4699 4.08993 13.3199L2.36993 16.7699C1.15993 19.1699 2.90993 21.9999 5.58993 21.9999H18.3499C20.9499 21.9999 22.6999 19.3499 21.6799 16.9599Z" stroke="#292D32" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                                            <path d="M6.96997 8C8.62682 8 9.96997 6.65685 9.96997 5C9.96997 3.34315 8.62682 2 6.96997 2C5.31312 2 3.96997 3.34315 3.96997 5C3.96997 6.65685 5.31312 8 6.96997 8Z" stroke="#292D32" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                                            <path d="M21.6799 16.9599L18.5499 9.64988C17.4899 7.16988 15.5399 7.06988 14.2299 9.42988L12.3399 12.8399C11.3799 14.5699 9.58993 14.7199 8.34993 13.1699L8.12993 12.8899C6.83993 11.2699 5.01993 11.4699 4.08993 13.3199L2.36993 16.7699C1.15993 19.1699 2.90993 21.9999 5.58993 21.9999H18.3499C20.9499 21.9999 22.6999 19.3499 21.6799 16.9599Z" stroke="#292D32" stroke-width="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                                            <path d="M6.96997 8C8.62682 8 9.96997 6.65685 9.96997 5C9.96997 3.34315 8.62682 2 6.96997 2C5.31312 2 3.96997 3.34315 3.96997 5C3.96997 6.65685 5.31312 8 6.96997 8Z" stroke="#292D32" stroke-width="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                                         </svg>
                                                     </div>
                                             }
@@ -147,7 +147,7 @@ const ProjectDynamic = () => {
                                                 tabs.filter(tab => tab.id == currentTab)[0].element
                                             }
                                         </div>
-                                    </>
+                                    </div>
                                 })
                             }
                         </div>
