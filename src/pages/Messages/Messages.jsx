@@ -63,10 +63,12 @@ const Messages = () => {
                   <div className={`flex flex-col py-6 h-full overflow-y-auto`}>
                       {
                         messagesData?.map((message, idx) => {
-                          return <div key={idx} className={`flex flex-col gap-4 cursor-pointer w-full py-4 px-2 rounded-ten hover:bg-brandBlue1x/10`}>
-                            <div className="flex flex-row gap-4">
-                              <UserImg src={message.project_photo} width={"w-8"} />
+                          return <div key={idx} className={`flex flex-row gap-4 cursor-pointer w-full py-4 px-2 rounded-ten hover:bg-brandBlue1x/10`}>
+                            <UserImg src={message.project_photo} width={"w-8 h-8"} minWidth={'min-w-8'} />
+
+                            <div className="flex flex-col gap-4">
                               <p className={`text-sm font-avenirHeavy text-brandSec500`}>{message.name.charAt(0).toUpperCase() + message.name.slice(1)}</p>
+                              <p className="text-brandGray4x">{message?.project_message?.[0]?.message}</p>
                             </div>
                           </div>
                         })
