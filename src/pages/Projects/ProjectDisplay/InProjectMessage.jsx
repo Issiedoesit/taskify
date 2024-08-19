@@ -150,7 +150,7 @@ const InProjectMessage = ({
                                 <UserImg src={message.user.profile_photo} alt={`${message.user.first_name} ${message.user.last_name}`} width={"w-6"} />
                                 <p className={`capitalize text-xxs text-white`}>{message.user.first_name} {message.user.last_name}</p>
                             </div>  
-                            <div className={`rounded-ten ${isUser ? "bg-brandBlue1x text-white rounded-lt-0" : "bg-white text-brandBlue1x rounded-rt-0"} px-3 py-2`}>
+                            <div className={`rounded-ten ${isUser ? "bg-brandBlue1x text-white rounded-tr-0" : "bg-white text-brandBlue1x rounded-tl-0"} px-3 py-2`}>
                                 <p>{message?.message}</p>
                             </div>
                         </div>
