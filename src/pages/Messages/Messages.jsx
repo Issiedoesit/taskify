@@ -148,7 +148,7 @@ const Messages = () => {
         <div
           className={`flex ${
             translate ? "h-screen lg:h-full" : ""
-          } bg-white flex flex-row lg:gap-10 h-full ${
+          } bg-white flex flex-row h-full ${
             translate ? "pb-44 lg:pb-10" : "pb-10"
           } pb-10 w-full lg:w-full transition-transform duration-300 ease-in-out ${
             translate ? "-translate-x-hundredPercent lg:translate-x-0" : ""
@@ -287,7 +287,7 @@ const Messages = () => {
                     return (
                       <div
                         key={idx}
-                        className={`w-10/12 text-sm flex flex-col gap-2 ${
+                        className={`text-sm flex flex-col gap-2 ${
                           isUser ? "self-end" : ""
                         }`}
                       >
@@ -306,43 +306,7 @@ const Messages = () => {
                           </p>
                         </div>
                         <div
-                          className={`rounded-ten w-full max-w-md ${
-                            isUser
-                              ? "bg-brandBlue1x text-white rounded-tr-none self-end"
-                              : "bg-brandGray4x/20 text-brandBlue1x rounded-tl-none"
-                          } px-3 py-2`}
-                        >
-                          <p>{message?.message}</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                  {sortedMessages?.map((message, idx) => {
-                    const isUser = message?.user_id == user?.user_id;
-                    // console.log("message", message)
-                    return (
-                      <div
-                        key={idx}
-                        className={`w-10/12 text-sm flex flex-col gap-2 ${
-                          isUser ? "self-end" : ""
-                        }`}
-                      >
-                        <div
-                          className={`flex gap-2 items-center ${
-                            isUser ? "self-end flex-row-reverse" : "flex-row"
-                          }`}
-                        >
-                          <UserImg
-                            src={message.user.profile_photo}
-                            alt={`${message.user.first_name} ${message.user.last_name}`}
-                            width={"w-6"}
-                          />
-                          <p className={`capitalize text-xxs text-white`}>
-                            {message.user.first_name} {message.user.last_name}
-                          </p>
-                        </div>
-                        <div
-                          className={`rounded-ten w-full max-w-md ${
+                          className={`rounded-ten w-fit max-w-md ${
                             isUser
                               ? "bg-brandBlue1x text-white rounded-tr-none self-end"
                               : "bg-brandGray4x/20 text-brandBlue1x rounded-tl-none"

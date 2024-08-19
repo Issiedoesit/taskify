@@ -145,7 +145,7 @@ const InProjectMessage = ({
                 {
                     sortedMessages?.map((message, idx) => {
                         const isUser = message?.user_id == user?.user_id
-                        return <div key={idx} className={`w-10/12 text-sm flex flex-col gap-2 ${isUser ? "self-end" : ""}`}>
+                        return <div key={idx} className={`w-fit max-w-eightyPercent text-sm flex flex-col gap-2 ${isUser ? "self-end" : ""}`}>
                             <div className={`flex gap-2 items-center ${isUser ? "self-end flex-row-reverse" : "flex-row"}`}>
                                 <UserImg src={message.user.profile_photo} alt={`${message.user.first_name} ${message.user.last_name}`} width={"w-6"} />
                                 <p className={`capitalize text-xxs text-white`}>{message.user.first_name} {message.user.last_name}</p>
