@@ -12,9 +12,7 @@ const ProjectTable = ({data}) => {
 
     // const sortedCustomers = [...customersData].sort((a, b) => {
     //     if (sortBy === "date") {
-    //       const dateA = new Date(a.date);
-    //       const dateB = new Date(b.date);
-    //       return dateA - dateB;
+    //      
     //     } else if (sortBy === "amount") {
     //       const amountA = parseFloat(a.amount);
     //       const amountB = parseFloat(b.amount);

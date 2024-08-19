@@ -10,7 +10,7 @@ const ProjectMembers = ({ users, creator, isAdmin }) => {
     const [rowLength, setRowLength] = useState(8)
 
 
-    const { currentPage, templates, loading: dataLoading, rows: paginatorRows, totalPages, dottedArray, movePageBy, paginate, displayedData } = usePagination(tasks, rowLength, "projectMembersWrap")
+    const { currentPage, templates, loading: dataLoading, rows: paginatorRows, totalPages, dottedArray, movePageBy, paginate, displayedData } = usePagination(users, rowLength, "projectMembersWrap")
 
     return (
         <div id={"projectMembersWrap"}>
@@ -19,8 +19,8 @@ const ProjectMembers = ({ users, creator, isAdmin }) => {
                     ?
                     <div className={`py-4 grid grid-cols-1 gap-4`}>
                         {
-                            users?.map((user, idx) => {
-                                return <div className={`flex flex-row gap-2 items-center py-4 border-b-0.5`}>
+                            displayedData?.map((user, idx) => {
+                                return <div key={idx} className={`flex flex-row gap-2 items-center py-4 border-b-0.5`}>
                                     <UserImg width={"w-10"} src={user.user.profile_photo} alt={`${user.user.first_name} ${user.user.last_name} `} />
                                     <div>
                                         <p className={`capitalize font-avenirMedium text-sm text-lexf text-brandSec500`}>{user.user.first_name} {user.user.last_name}
@@ -33,7 +33,7 @@ const ProjectMembers = ({ users, creator, isAdmin }) => {
                             })
                         }
                         <div className='pt-4 text-sm'>
-                            {tasks && tasks.length > rowLength && <Paginator btnSize={"px-3 py-1"} arrowBtnSize={"px-3 py-1"} justifySection={"justify-center"} currentPage={currentPage} totalPages={totalPages} dottedArray={dottedArray} movePageBy={movePageBy} paginate={paginate} />}
+                            {users && users.length > rowLength && <Paginator btnSize={"px-3 py-1"} arrowBtnSize={"px-3 py-1"} justifySection={"justify-center"} currentPage={currentPage} totalPages={totalPages} dottedArray={dottedArray} movePageBy={movePageBy} paginate={paginate} />}
                         </div>
                     </div>
                     :

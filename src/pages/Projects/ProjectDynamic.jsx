@@ -13,9 +13,10 @@ import { ToastContainer } from 'react-toastify'
 import ProjectMembers from './ProjectDisplay/ProjectMembers'
 import ButtonPrimaryIcon from '../../components/Buttons/ButtonPrimaryIcon'
 import ViewTask from '../Task/TasksDisplay.jsx/ViewTask'
-import { FaChevronLeft, FaLock, FaPlus } from 'react-icons/fa'
+import { FaLock } from 'react-icons/fa'
 import { FaMessage } from "react-icons/fa6";
 import AddUser from './AddUser'
+import InProjectMessage from './ProjectDisplay/InProjectMessage'
 
 const ProjectDynamic = () => {
 
@@ -26,6 +27,7 @@ const ProjectDynamic = () => {
     const [isViewTaskOpen, setIsViewTaskOpen] = useState(false)
     const [currentTask, setCurrentTask] = useState([])
     const [translate, setTranslate] = useState(false)
+    const [header, setHeader] = useState(true)
 
 
     const { user, token } = useGetUser()
@@ -33,16 +35,20 @@ const ProjectDynamic = () => {
     const fetcher = async (url) => axios.get(url, { headers: { Authorization: `Bearer ${token}` } })
 
     const { data: project, error, isLoading, mutate } = useSWR(import.meta.env.VITE_BASEURL + `/project/${projectId}`, fetcher, { refreshInterval: 200 })
+    const { data: messages, error:messagesError, isLoading:messagesIsLoading, mutate:mutateMessages } = useSWR(import.meta.env.VITE_BASEURL + `/message/group/${projectId}`, fetcher, { refreshInterval: 200 })
 
 
     // !isLoading && project?.data && console.log(project)
     // !isLoading && project?.data && console.log(project.data)
+    // !messagesIsLoading && messages?.data && console.log(messages.data)
 
     const projectData = [project?.data?.data] || []
+    const messagesData = messages?.data?.data || []
     // console.log("projectData[0].users => ", projectData?.[0]?.users)
+    console.log("Messages => ", messagesData)
 
     if (isLoading) return <DashTemplate><PageLoaderNoNav /></DashTemplate>
-    if (error || project.data.code == 400) return <ErrorPageNotFound page={"Projects"} link={"/projects"} message={"Something went wrong"} />
+    if (error || messagesError || project.data.code == 400) return <ErrorPageNotFound page={"Projects"} link={"/projects"} message={"Something went wrong"} />
 
     const isAdmin = projectData[0].users.filter(u => u.user.user_id == user.user_id)[0].role == "admin"
     const isAssignee = currentTask?.[0]?.user_id == user.user_id
@@ -77,14 +83,14 @@ const ProjectDynamic = () => {
     return (
         <>
             <DashTemplate>
-                <UserImgHeader subHeader={"Manage your projects easily!"} />
+                {header && <UserImgHeader subHeader={"Manage your projects easily!"} />}
 
                 <div className='relative lg:static w-full overflow-hidden lg:overflow-visible'>
                     <div className={`flex ${translate ? "h-screen lg:h-full" : ""} lg:grid lg:grid-cols-3 lg:gap-10 h-full pt-10 w-full lg:w-full transition-transform duration-300 ease-in-out ${translate ? "-translate-x-hundredPercent lg:translate-x-0" : ""}`}>
                         <div className={`min-w-full md:col-span-2 w-full`}>
                             {
                                 projectData?.map((project, idx) => {
-                                    return <div key={idx} className='lfex flex-col gap-4 w-full'>
+                                    return <div key={idx} className='flex flex-col gap-6 w-full'>
                                         <div className='w-full rounded-ten'>
                                             {
                                                 project.project_photo
@@ -103,7 +109,7 @@ const ProjectDynamic = () => {
                                         {/* project details */}
                                         <HeaderAndText header={project.name} subHeader={project.description} hasNoButton />
 
-                                        <div className='pt-6'>
+                                        <div className=''>
                                             <p className={`text-sm text-brandBlue1x`}>Creator</p>
                                             <div className={`flex pt-2 flex-row items-center gap-2`}>
                                                 <img src={project?.creator?.profile_photo} alt={`${project?.creator?.first_name} ${project?.creator?.last_name}`} className={`skeleton--white rounded-full w-12 aspect-square`} />
@@ -111,17 +117,17 @@ const ProjectDynamic = () => {
                                             </div>
                                         </div>
 
-                                        <div className='flex gap-2 justify-end pt-10 pb-6'>
-                                            <div className='lg:hidden'>
-                                                <ButtonPrimaryIcon handleClick={() => { setTranslate(true) }} bgColor={"bg-brandSec500"} text={" "} gap={"gap-0"} icon={<FaMessage className='text-xl' />} paddingX={"px-4"} />
+                                        <div className='flex gap-2 justify-end'>
+                                            <div className='lg:hidden pt-10 pb-6'>
+                                                <ButtonPrimaryIcon handleClick={() => { setTranslate(true), setHeader(false) }} bgColor={"bg-brandSec500"} text={" "} gap={"gap-0"} icon={<FaMessage className='text-xl' />} paddingX={"px-4"} />
                                             </div>
                                             {
                                                 isAdmin
                                                 &&
-                                                <>
+                                                <div className='flex gap-2 justify-end pt-10 pb-6'>
                                                     <ButtonPrimaryIcon bgColor={"bg-brandSec500"} text={"Add Task"} handleClick={() => setIsOpen(true)} />
                                                     <ButtonPrimaryIcon bgColor={"bg-brandSec500"} text={"Add User"} handleClick={() => setIsAddUserOpen(true)} />
-                                                </>
+                                                </div>
                                             }
                                         </div>
 
@@ -151,31 +157,7 @@ const ProjectDynamic = () => {
                                 })
                             }
                         </div>
-                        <div className='flex flex-col justify-between transition-all duration-300 ease-in-out min-w-full w-full  col-span-1 bg-brandSec500 h-fit min-h-410 lg:sticky top-0 right-0 pt-8 pb-4 px-4 max-h-screen'>
-                            <div>
-                            <div className='flex flex-row gap-4 items-start'>
-                                <button onClick={() => setTranslate(false)} title='Back to project' aria-label='Back to project' type='button'
-                                    className={`lg:hidden text-white pt-1 hover:translate-x-2 transition-all duration-300 ease-in-out`}>
-                                    <span className='sr-only'>
-                                        Back to project
-                                    </span>
-                                    <FaChevronLeft className='text-xl' />
-                                </button>
-                                <HeaderAndText textColor="text-white" header={"Messages"} subHeader={" "} hasNoButton />
-                            </div>
-                            <div className={`min-h-full py-28 justify-center bg-white flex flex-col gap-2 items-center text-brandSec500 rounded-ten w-full`}>
-                                <FaPlus className='text-brandBlue1x text-2xl' />
-                                <p className={`text-xs`}>
-                                    No messages yet
-                                </p>
-                            </div>
-                            </div>
-                            <div className={`flex p-4 w-full bg-white rounded-full mb-0 justify-self-end`}>
-                                <label>
-
-                                </label>
-                            </div>
-                        </div>
+                        <InProjectMessage messages={messagesData} setHeader={setHeader} loading={messagesIsLoading} setTranslate={setTranslate} projectId={projectId} mutate={mutateMessages}  />
                     </div>
                 </div>
             </DashTemplate>

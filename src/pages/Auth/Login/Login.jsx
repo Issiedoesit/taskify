@@ -146,7 +146,6 @@ const Login = () => {
     }
   }
 
-  const strength = minimumEight + oneNumber + oneUpper + oneLower
 
   useEffect(() => {
     if (formik.values.password.length >= 8) {
