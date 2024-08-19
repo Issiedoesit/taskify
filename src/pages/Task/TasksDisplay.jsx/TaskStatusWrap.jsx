@@ -4,8 +4,9 @@ import TaskCard from './TaskCard'
 import formatDateMonthText from '../../../utils/formatDateMonthText'
 import usePagination from '../../../utils/usePagination'
 import Paginator from '../../../components/Pagination/Paginator'
+import EmptyTable from '../../../components/Sections/EmptyTable'
 
-const TaskStatusWrap = ({ status, data, cardBgColor }) => {
+const TaskStatusWrap = ({ status, data, cardBgColor, openViewTask }) => {
 
 
     const [open, setOpen] = useState(false)
@@ -28,14 +29,12 @@ const TaskStatusWrap = ({ status, data, cardBgColor }) => {
                     {
                         data?.length == 0
                             ?
-                            <div className={`py-6 px-4 text-sm text-center`}>
-                                <p>Nothing to display here.</p>
-                            </div>
+                            <EmptyTable paddingY={""} message={"Nothing to display here"} />
                             :
                             <>
                                 {
-                                    data.map((task, idx) => {
-                                        return <TaskCard key={idx} members={task.project?.users} taskName={task.title} projectId={task.project_id} project={task.project.name} taskStart={task.created_at} taskDue={task.due_date} bgColor={cardBgColor} />
+                                    displayedData.map((task, idx) => {
+                                        return <TaskCard key={idx} openViewTask={()=>openViewTask(task)} taskId={task.task_id} members={task.project?.users} taskName={task.title} projectId={task.project_id} project={task.project.name} taskStart={task.created_at} taskDue={task.due_date} bgColor={cardBgColor} />
                                     })
                                 }
 
@@ -45,7 +44,7 @@ const TaskStatusWrap = ({ status, data, cardBgColor }) => {
                 </div>
                 {
                     data.length !== 0 && <div className={`py-6`}>
-                        {data && data.length > 5 && <Paginator currentPage={currentPage} totalPages={totalPages} dottedArray={dottedArray} movePageBy={movePageBy} paginate={paginate} />}
+                        {data && data.length > 5 && <Paginator btnSize={"px-3 py-1"} arrowBtnSize={"px-3 py-1"} justifySection={"justify-center"} currentPage={currentPage} totalPages={totalPages} dottedArray={dottedArray} movePageBy={movePageBy} paginate={paginate} />}
                     </div>
                 }
             </div>

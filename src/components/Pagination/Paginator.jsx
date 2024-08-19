@@ -10,7 +10,7 @@ const Paginator = ({id, currentPage, totalPages, dottedArray, movePageBy, pagina
             </svg>
         </button>
             
-            {dottedArray.map((page, index)=>{
+            {dottedArray?.map((page, index)=>{
             return <button  key={index} type='button' title={`${page !== '...' && page == currentPage ? 'You\'re on page '+ page : 'Go To Page ' + page}`} onClick={()=>{page !== '...' && paginate(page)}} className={`${btnSize || 'px-2 sm:px-4 md:px-5'} bg-white rounded-six self-stretch ${fontSize ? fontSize : "text-sm sm:text-base md:text-xl"} ${currentPage == page ? 'border-brandBlue1x' : 'border-brandGray26x'} border-1.5`} ><span>{page}</span></button>
             })}
 

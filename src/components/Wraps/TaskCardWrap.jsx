@@ -16,7 +16,7 @@ const TaskCardWrap = ({ projectImg, name, project, link, description, creator, m
     const percent = (completed/total) * 100
 
     return (
-        <NavLink to={link} className={`w-full rounded-ten shadow-md ${maxWidth ? maxWidth : "md:max-w-xs"}`}>
+        <NavLink to={link} className={`w-full rounded-ten shadow-md bg-white hover:bg-brandBlue1x/5 transition-all duration-300 ease-in-out ${maxWidth ? maxWidth : "md:max-w-xs"}`}>
 
             {
                 projectImg

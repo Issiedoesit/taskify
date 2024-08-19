@@ -50,7 +50,7 @@ const ViewTask = ({ isOpen, setIsOpen, taskData, users, isAdmin, isAssignee, mut
                                             <p className={`capitalize`}>{task.assigned_by_user.user.first_name} {task.assigned_by_user.user.last_name.split("")[0]}. </p>
                                     }
                                     {/* {console.log(users.filter(u => u.user.user_id == task.user_id))} */}
-                                    <img src={users.filter(u => u.user.user_id == task.user_id)?.[0].user.profile_photo} className={`skeleton--white rounded-full w-6 aspect-square`} />
+                                    <img src={users?.filter(u => u.user.user_id == task.user_id)?.[0].user.profile_photo} className={`skeleton--white rounded-full w-6 aspect-square`} />
 
                                 </div>
                             </div>

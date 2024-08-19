@@ -37,6 +37,10 @@ const Projects = () => {
     //     paginate()
     // }, [projectData])
 
+    const createdPojectsLength = projectData?.filter(data => data?.creator?.user_id == user?.user_id)?.length
+
+    // console.log(createdPojectsLength)
+
     if (isLoading) return <DashTemplate><PageLoaderNoNav /></DashTemplate>
 
     return (
@@ -61,8 +65,8 @@ const Projects = () => {
 
                                     </div>
                                     <div className={`flex flex-col gap-1 text-left`}>
-                                        <p className={`text-2xl font-avenirHeavy`}>40</p>
-                                        <p className='text-lg'>Projects Created</p>
+                                        <p className={`text-2xl font-avenirHeavy`}>{createdPojectsLength}</p>
+                                        <p className='text-lg'>Project(s) Created</p>
                                     </div>
                                 </div>
                             </CardWrap>
@@ -81,8 +85,8 @@ const Projects = () => {
 
                                     </div>
                                     <div className={`flex flex-col gap-1 text-left`}>
-                                        <p className={`text-2xl font-avenirHeavy`}>25</p>
-                                        <p className='text-lg'>Projects Joined</p>
+                                        <p className={`text-2xl font-avenirHeavy`}>{projectData?.length - createdPojectsLength}</p>
+                                        <p className='text-lg'>Project(s) Joined</p>
                                     </div>
                                 </div>
                             </CardWrap>

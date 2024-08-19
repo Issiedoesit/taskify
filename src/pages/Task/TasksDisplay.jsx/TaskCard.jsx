@@ -8,12 +8,12 @@ import { FaCalendar } from 'react-icons/fa'
 import formatDateMonthText from '../../../utils/formatDateMonthText'
 import { NavLink } from 'react-router-dom'
 
-const TaskCard = ({ members, status, project, taskName, projectId, taskStart, taskDue, priority, tags, bgColor }) => {
+const TaskCard = ({ members, taskId, status, openViewTask, project, taskName, projectId, taskStart, taskDue, priority, tags, bgColor }) => {
     
     const [stackedPics, setStackedPics] = useState(2)
     
     return (
-        <div className={`py-6 px-4  ${bgColor ? bgColor : "bg-white"} rounded-ten flex flex-col gap-8 shadow-md`}>
+        <div id={`viewTask${taskId}`} onClick={openViewTask} className={`py-6 px-4  ${bgColor ? bgColor : "bg-white"} hover:bg-white/5 cursor-pointer rounded-ten flex flex-col gap-8 shadow-md`}>
             <div className={`flex items-center justify-between gap-8`}>
 
                 <Tooltip.Group>
@@ -46,10 +46,10 @@ const TaskCard = ({ members, status, project, taskName, projectId, taskStart, ta
                         <NavLink to={`/projects/${projectId}`} className={`text-brandSec500/50 font-avenirMedium text-sm first-letter:capitalize`}>{project.charAt(0).toUpperCase() + project.slice(1) || "Project Name"}</NavLink>
                         <div className='flex items-center gap-2 py-3'>
                             <div className={`bg-brandLightBlue1x text-brandBlue1x text-xs rounded-full px-3 py-1`}>
-                                <p>{priority || "Design"}</p>
+                                <p>{tags || "Design"}</p>
                             </div>
                             <div className={`bg-brandPeach1x text-brandRed3x text-xs rounded-full px-3 py-1`}>
-                                <p>{priority || "Arts"}</p>
+                                <p>{tags || "Arts"}</p>
                             </div>
                         </div>
                     </div>

@@ -103,7 +103,7 @@ const ProjectDynamic = () => {
                                         {/* project details */}
                                         <HeaderAndText header={project.name} subHeader={project.description} hasNoButton />
 
-                                        <div className=''>
+                                        <div className='pt-6'>
                                             <p className={`text-sm text-brandBlue1x`}>Creator</p>
                                             <div className={`flex pt-2 flex-row items-center gap-2`}>
                                                 <img src={project?.creator?.profile_photo} alt={`${project?.creator?.first_name} ${project?.creator?.last_name}`} className={`skeleton--white rounded-full w-12 aspect-square`} />

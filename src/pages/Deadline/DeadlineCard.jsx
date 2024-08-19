@@ -56,9 +56,9 @@ const DeadlineCard = ({ header, tasks, bgColor, isLoading, openTask }) => {
                                                                     <input type='checkbox' className={`accent-brandGreen4x`} />
                                                                 </label>
                                                             </td>
-                                                            <td onClick={()=>openTask(task)} className='py-2 flex flex-row items-center px-5 gap-1.5'>
-                                                                <p className={`py-2 whitespace-nowrap text-brandSec500 font-avenirMedium capitalize`}>{task.title || "Sample task"}</p>
-                                                                <FaChevronRight className='text-brandSec500'  />
+                                                            <td onClick={()=>openTask(task)} className='group cursor-pointer py-2 flex flex-row items-center px-5 gap-1.5'>
+                                                                <p className={`py-2 whitespace-nowrap text-brandSec500 group-hover:text-brandBlue1x transition-all duration-300 ease-in-out font-avenirMedium capitalize`}>{task.title || "Sample task"}</p>
+                                                                <FaChevronRight className='text-brandSec500 group-hover:text-brandBlue1x transition-all duration-300 ease-in-out group-hover:translate-x-1'  />
                                                             </td>
                                                             <td className='py-2 px-1'>
                                                                 <p className={`px-4 py-2 whitespace-nowrap text-brandSec500 font-avenirMedium capitalize`}>{formatDateMonthText(task.due_date) || "January 11, 1999"}</p>

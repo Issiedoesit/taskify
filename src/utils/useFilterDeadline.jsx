@@ -64,9 +64,9 @@ const useFilterDeadline = (tasks) => {
 
         switch (range) {
             case 'past_due':
-                startDate = new Date();
-                startDate.setHours(startDate.getHours() - 1); // 1 hour ago
-                endDate = now;
+                startDate = null; // No specific start date for past due
+                endDate = new Date();
+                endDate.setHours(0, 0, 0, 0); // End date is the start of today (midnight)
                 break;
             case 'today':
                 startDate = new Date();
@@ -88,7 +88,6 @@ const useFilterDeadline = (tasks) => {
                 tomorrow.setDate(today.getDate() + 1);
                 startDate = getStartOfNextWeek(now); // Next week starts from the upcoming Sunday
                 endDate = getEndOfWeek(now); // End of the current week (Saturday)
-                // Adjust startDate to exclude today and tomorrow
                 if (today.getDay() !== 0) { // If today is not Sunday
                     startDate.setDate(startDate.getDate() + 1); // Start from the day after tomorrow
                 }
@@ -97,7 +96,6 @@ const useFilterDeadline = (tasks) => {
             case 'this_month':
                 startDate = getStartOfNextWeek(now); // Next Sunday
                 endDate = getEndOfMonth(now); // End of the current month
-                // Ensure startDate is the next Sunday
                 if (now.getDay() === 0) { // If today is Sunday
                     startDate.setDate(startDate.getDate() + 1); // Start from the day after next Sunday
                 }
@@ -121,17 +119,16 @@ const useFilterDeadline = (tasks) => {
         const filteredTasks = taskToFilter.filter(task => {
             const dueDate = new Date(task.due_date);
             const isNotCompleted = task.status !== 'completed';
-            const isPastDue = dueDate < now && isNotCompleted;
-
+            
             if (range === 'future') {
                 return isNotCompleted && (dueDate >= startDate);
             }
 
             if (startDate && endDate) {
-                return isNotCompleted && (dueDate >= startDate && dueDate <= endDate);
+                return isNotCompleted && (dueDate >= startDate && dueDate < endDate);
             }
 
-            return isPastDue && range === 'past_due';
+            return range === 'past_due' && isNotCompleted && (dueDate < endDate);
         });
 
         // Sort by due date
@@ -147,14 +144,14 @@ const useFilterDeadline = (tasks) => {
     const dueRestOfYear = filterTasks(tasks, 'rest_of_year');
     const dueFuture = filterTasks(tasks, 'future');
 
-    // console.log('Due Today:', dueToday);
-    // console.log('Due Tomorrow:', dueTomorrow);
-    // console.log('Due This Week:', dueThisWeek);
-    // console.log('Due This Month:', dueThisMonth);
-    // console.log('Due Next Month:', dueNextMonth);
-    // console.log('Past Due:', duePastDue);
-    // console.log('Rest of Year:', dueRestOfYear);
-    // console.log('Future:', dueFuture);
+    console.log('Due Today:', dueToday);
+    console.log('Due Tomorrow:', dueTomorrow);
+    console.log('Due This Week:', dueThisWeek);
+    console.log('Due This Month:', dueThisMonth);
+    console.log('Due Next Month:', dueNextMonth);
+    console.log('Past Due:', duePastDue);
+    console.log('Rest of Year:', dueRestOfYear);
+    console.log('Future:', dueFuture);
 
     return { duePastDue, dueToday, dueTomorrow, dueThisWeek, dueThisMonth, dueNextMonth, dueRestOfYear, dueFuture };
 }
