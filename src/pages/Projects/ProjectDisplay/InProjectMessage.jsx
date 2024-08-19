@@ -108,7 +108,7 @@ const InProjectMessage = ({
       setHeight(tempHeight)
   })
 
-  
+
 
   return (
     <div style={{height:`${height}px`}} className="flex flex-col gap-4 justify-between transition-all duration-300 ease-in-out min-w-full w-full col-span-1 bg-brandSec500 lg:sticky top-0 right-0 pt-8 pb-4 px-2">
@@ -169,7 +169,8 @@ const InProjectMessage = ({
             value={formik.values.message}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            className={`w-full py-1 px-2 rounded-l-full`}
+            className={`w-full py-1 px-2 rounded-l-full placeholder:text-sm`}
+            placeholder={"Send a message ..."}
           />
         </label>
         <button

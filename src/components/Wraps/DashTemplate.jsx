@@ -6,7 +6,7 @@ import UserImgAndNotif from '../Sections/UserImgAndNotif'
 import useGetUser from '../../utils/useGetUser'
 import useScrollDirection from '../../hooks/useScrollDirection'
 
-const DashTemplate = ({ messageProjectView, children }) => {
+const DashTemplate = ({ messageView, children }) => {
 
   const menuRef = useRef(null)
   const [isOpen, setIsOpen] = useState(false)
@@ -16,7 +16,7 @@ const DashTemplate = ({ messageProjectView, children }) => {
   const { scrollUp } = useScrollDirection()
 
   return (
-    <div className='flex w-full bg-brandDashGray1x min-h-full'>
+    <div className={`flex w-full bg-brandDashGray1x min-h-full`}>
       <Nav menuRef={menuRef} isOpen={isOpen} setIsOpen={setIsOpen} />
 
       {/* large screen */}
@@ -40,8 +40,8 @@ const DashTemplate = ({ messageProjectView, children }) => {
 
           </div>
         </div>
-        <div className={`pb-48 lg:pb-24 pt-8 px-8 md:px-10 overflow-y-auto bg-brandDashGray1x h-full min-h-full w-full flex flex-col max-w-full overflow-x-hidden`}>
-          <div>
+        <div className={`${messageView ? messageView : 'pb-48 lg:pb-24 pt-8 px-8 md:px-10 overflow-y-auto h-full min-h-full'}  bg-brandDashGray1x w-full flex flex-col max-w-full overflow-x-hidden`}>
+          <div className={`${messageView}`}>
             {children}
           </div>
         </div>
@@ -71,7 +71,7 @@ const DashTemplate = ({ messageProjectView, children }) => {
 
           </div>
         </div>
-        <div className={`lg:pb-24 pt-8 px-8 md:px-10 bg-brandDashGray1x overflow-y-auto h-full min-h-full w-full flex flex-col max-w-full overflow-x-hidden`}>
+        <div className={`${messageView ? messageView : 'lg:pb-24 pt-8 px-8 md:px-10 overflow-y-auto h-full min-h-full'} bg-brandDashGray1x w-full flex flex-col max-w-full overflow-x-hidden`}>
           {children}
         </div>
       </div>
