@@ -214,33 +214,6 @@ const Messages = () => {
                     </div>
                   );
                 })}
-                {messagesData?.map((message, idx) => {
-                  return (
-                    <div
-                      key={idx}
-                      onClick={() => openMessage(message)}
-                      className={`flex flex-row gap-4 cursor-pointer w-full py-4 px-2 rounded-ten hover:bg-brandBlue1x/10`}
-                    >
-                      <UserImg
-                        src={message.project_photo}
-                        width={"w-12 h-12"}
-                        minWidth={"min-w-12"}
-                      />
-
-                      <div className="flex flex-col gap-1">
-                        <p
-                          className={`text-sm font-avenirHeavy text-brandSec500`}
-                        >
-                          {message.name.charAt(0).toUpperCase() +
-                            message.name.slice(1)}
-                        </p>
-                        <p className="text-brandGray4x font-avenirLight text-xs two-lined-text">
-                          {message?.project_message?.[0]?.message}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
               </div>
             </div>
           </div>

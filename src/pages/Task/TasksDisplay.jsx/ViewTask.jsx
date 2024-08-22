@@ -144,6 +144,12 @@ const ViewTask = ({ isOpen, setIsOpen, taskData, users, isAdmin, isAssignee, mut
                                     </p>
                                 </div>
                                 <div className={`flex flex-row gap-10`}>
+                                    <p className='text-brandGray4x/50 min-w-24'>Completed</p>
+                                    <p className='text-brandSec500 capitalize'>
+                                       {task.date_completed ? formatDateMonthText(task.date_completed) : "Not Yet"}
+                                    </p>
+                                </div>
+                                <div className={`flex flex-row gap-10`}>
                                     <p className='text-brandGray4x/50 min-w-24'>Description</p>
                                     <p className='text-brandSec500 first-letter:capitalize'>
                                         {task.description}

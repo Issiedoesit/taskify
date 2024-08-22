@@ -10,6 +10,7 @@ import useSWR from 'swr'
 import PageLoaderNoNav from '../../components/Loaders/PageLoaderNoNav'
 import { PieChart } from 'react-minimal-pie-chart'
 import CreateProject from '../Projects/CreateProject'
+import OverviewChart from '../../components/Charts/OverviewChart'
 
 const Overview = () => {
 
@@ -30,10 +31,14 @@ const Overview = () => {
 
     const analyticsData = analytics?.data?.data || []
 
+    const pending = analyticsData?.task_data?.total_number_of_pending_task
+    const inProgess = analyticsData?.task_data?.total_number_of_in_progress_task
+    const completed = analyticsData?.task_data?.total_number_of_completed_task
+
     const chartData = [
-        { title: 'Pending', value: analyticsData?.task_data?.total_number_of_pending_task, color: '#D86417' },
-        { title: 'In Progress', value: analyticsData?.task_data?.total_number_of_in_progress_task, color: '#FFF20D' },
-        { title: 'Completed', value: analyticsData?.task_data?.total_number_of_completed_task, color: '#26B315' },
+        { title: 'Pending', value: pending, color: '#D86417' },
+        { title: 'In Progress', value: inProgess, color: '#FFF20D' },
+        { title: 'Completed', value: completed, color: '#26B315' },
     ]
 
 
@@ -52,12 +57,12 @@ const Overview = () => {
                             <div className='text-4xl font-avenirHeavy'>
                                 <p>{analyticsData?.task_data?.total_number_of_in_progress_task}</p>
                             </div>
-                            <div className='pt-4 flex flex-row items-center gap-6'>
-                                <div className='flex flex-col gap-4'>
+                            <div className='pt-4 flex flex-row items-center gap-6 w-full'>
+                                <div className='flex flex-col gap-4 w-full'>
                                     {
-                                        !analyticsData
+                                        !analyticsData || (!pending && !inProgess && !completed)
                                             ?
-                                            <div className={`w-32 ${analyticsLoading && "skeleton--white"} rounded-full bg-brandBlue1x aspect-square`}>
+                                            <div className={`w-full ${analyticsLoading && "skeleton--white"} rounded-full bg-brandBlue1x/50 aspect-square`}>
 
                                             </div>
                                             :
@@ -81,7 +86,7 @@ const Overview = () => {
                                         <div className={`grid grid-cols-3 gap-2 items-center`}>
                                             {
                                                 chartData.map((data, i) => {
-                                                    return <div className='flex flex-row gap-3 items-center'>
+                                                    return <div key={i} className='flex flex-row gap-3 items-center'>
                                                         <div style={{ backgroundColor: data.color }} className='w-3 rounded-full aspect-square' >
 
                                                         </div>
@@ -106,11 +111,12 @@ const Overview = () => {
                                     </svg>
                                 </button>
                             </div>
-                            <div className={`bg-white rounded-ten p-4 h-60 w-full`}>
+                            <OverviewChart overviewData={analyticsData?.task_data?.task_complete_count_by_day} />
 
-                            </div>
                         </CardWrap>
+
                     </div>
+
 
                     <div className={`flex flex-col gap-8 w-full`}>
                         <HeaderAndText handleClick={() => setIsOpen(true)} header={"Current Projects"} subHeader={"A glimpse into your projects"} buttonText={"New Project"} />

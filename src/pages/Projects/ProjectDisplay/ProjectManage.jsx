@@ -21,8 +21,8 @@ const ProjectManage = ({ mutate, projectId, project, creator, openDelete }) => {
   const formik = useFormik({
     initialValues: {
       name: convertToUppercase(project?.name) || "",
-      description: convertToUppercase(project?.description.charAt(0)) + project?.description.slice(0) || "",
-      project_photo: ""
+      description: convertToUppercase(project?.description) || "",
+      project_photo: project?.project_photo || ""
     },
     validationSchema: Yup.object({
       name: Yup.string()
@@ -42,7 +42,8 @@ const ProjectManage = ({ mutate, projectId, project, creator, openDelete }) => {
 
   const handleUpdateProject = (e) => {
     e.preventDefault()
-    if (formik.errors.name || formik.errors.description || (formik.values.project_photo !== "" && formik.errors.project_photo) || formik.errors.project_photo) {
+    // console.log(formik.errors)
+    if (formik.errors.name || formik.errors.description || ((formik.values.project_photo instanceof File) && formik.errors.project_photo)) {
       return
     }
 
@@ -200,6 +201,9 @@ const ProjectManage = ({ mutate, projectId, project, creator, openDelete }) => {
             </div>
           </label>
           <input type='file' name='project_photo' id={"project_photo"} onChange={(e) => handleFileInput(e)} onBlur={formik.handleBlur} className='absolute w-full h-full opacity-0' accept=".jpg,.jpeg,.png,.gif,image/*" />
+          {
+          (formik.touched.project_photo && formik.errors.project_photo) && <p className='text-xs text-brandRed1x'>* {formik.errors.project_photo}</p>
+          }
         </fieldset>
         <AuthInput inputId={"name"} inputName={"name"} inputLabel={"Name"} inputPlaceholder={"Project X"} handleChange={formik.handleChange} handleBlur={formik.handleBlur} inputValue={formik.values.name} fieldError={formik.touched.name && formik.errors.name} />
         <AuthInput inputId={"description"} inputName={"description"} inputLabel={"Description"} inputPlaceholder={"A design file for project X space mission..."} handleChange={formik.handleChange} handleBlur={formik.handleBlur} inputValue={formik.values.description} fieldError={formik.touched.description && formik.errors.description} />

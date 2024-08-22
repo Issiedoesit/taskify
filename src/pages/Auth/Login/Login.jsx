@@ -9,7 +9,7 @@ import AuthFormWrap from '../Widgets/AuthFormWrap'
 import AuthPassword from '../Widgets/AuthPassword'
 import PhoneInput from '../../../components/Form/PhoneInput'
 import ButtonPrimary from '../../../components/Buttons/ButtonPrimary'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import useDocTitle from '../../../hooks/useDocTitle'
 import AuthTemplate from '../../../components/Wraps/AuthTemplate'
 import { ToastContainer, toast } from 'react-toastify'
@@ -35,9 +35,9 @@ const Login = () => {
   const [oneNumber, setOneNumber] = useState(0);
   const [submitting, setSubmitting] = useState(false)
   const [identifier, setIdentifier] = useState("phone")
-  const location = useLocation()
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate()
-  const returnURL = location.state
+  const returnURL = searchParams.get("returnUrl") || "/"
 
   
   const formik = useFormik({

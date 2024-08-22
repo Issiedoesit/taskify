@@ -22,7 +22,7 @@ const useGetUser = () => {
     Cookies.remove('user');
     Cookies.remove('token');
     setUser(null);
-    navigate(`/auth/login`, { state: `${location.pathname}` })
+    navigate(`/auth/login?returnUrl=${location.pathname}`)
   };
 
   return {
