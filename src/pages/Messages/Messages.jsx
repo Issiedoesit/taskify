@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import MessageDashTemplate from "../../components/Wraps/MessageDashTemplate";
 import UserImgHeader from "../../components/Sections/UserImgHeader";
 import axios from "axios";
@@ -11,6 +11,9 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { BeatLoader } from "react-spinners";
+import timeSince from "../../utils/timeSince";
+import timeSinceAlt from "../../utils/timeSinceAlt";
+import MessageListTemplate from "./MessageListTemplate";
 
 const Messages = () => {
   const [translate, setTranslate] = useState(false);
@@ -29,7 +32,7 @@ const Messages = () => {
     },
     validationSchema: {
       message: Yup.string()
-      .required("Message required"),
+        .required("Message required"),
     },
   });
 
@@ -46,7 +49,7 @@ const Messages = () => {
     refreshInterval: 200,
   });
 
-  !messagesIsLoading && messages?.data && console.log(messages.data);
+  // !messagesIsLoading && messages?.data && console.log(messages.data);
 
   const messagesData = messages?.data?.data || [];
 
@@ -140,26 +143,39 @@ const Messages = () => {
     }
   };
 
+  const filteredData = useMemo(() => {
+    if (!searchTerm.trim()) {
+        return messagesData;
+    }
+    // console.log(searchTerm)
+    return messagesData?.filter(item =>
+      item?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item?.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item?.project_message?.some(message =>
+          message?.message.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+  );
+  
+}, [searchTerm, messagesData]);
+
+
+
   return (
     <>
       <MessageDashTemplate messageView={"overflow-hidden flex flex-col pb-4"}>
         <div
-          className={`${
-            header
-              ? "px-8 md:px-10 pt-8 pb-4"
-              : "hidden lg:block lg:px-10 lg:pt-8 lg:pb-4"
-          }`}
+          className={`${header
+            ? "px-8 md:px-10 pt-8 pb-4"
+            : "hidden lg:block lg:px-10 lg:pt-8 lg:pb-4"
+            }`}
         >
           <UserImgHeader subHeader={"Chat in projects!"} />
         </div>
         <div
-          className={`flex ${
-            translate ? "h-screen lg:h-full" : ""
-          } bg-white flex flex-row h-full ${
-            translate ? "pb-44 lg:pb-10" : "pb-10"
-          } pb-10 w-full lg:w-full transition-transform duration-300 ease-in-out ${
-            translate ? "-translate-x-hundredPercent lg:translate-x-0" : ""
-          }`}
+          className={`flex ${translate ? "h-screen lg:h-full" : ""
+            } bg-white flex flex-row h-full ${translate ? "pb-44 lg:pb-10" : "pb-10"
+            } pb-10 w-full lg:w-full transition-transform duration-300 ease-in-out ${translate ? "-translate-x-hundredPercent lg:translate-x-0" : ""
+            }`}
         >
           <div
             className={`lg:col-span-2 w-full min-w-full lg:min-w-thirtyPercent lg:w-thirtyPercent px-4 border-r-0.5 border-r-brandGray4x/20 overflow-y-auto`}
@@ -178,43 +194,54 @@ const Messages = () => {
                   className={`w-full px-4 py-2 bg-white rounded-ten`}
                 />
                 <FaSearch
-                  className={`${!searchTerm ? "text-brandGray11x" : ""} ${
-                    searchTerm && filteredData.length !== 0
-                      ? "text-brandGreen4x"
-                      : "text-brandRed1x"
-                  }`}
+                  className={`${!searchTerm ? "text-brandGray11x" : ""} ${searchTerm && filteredData.length !== 0
+                    ? "text-brandGreen4x"
+                    : "text-brandRed1x"
+                    }`}
                 />
               </label>
 
-              <div className={`flex flex-col py-6 h-fit`}>
-                {messagesData?.map((message, idx) => {
-                  return (
-                    <div
-                      key={idx}
-                      onClick={() => openMessage(message)}
-                      className={`flex flex-row gap-4 cursor-pointer w-full py-4 px-2 rounded-ten hover:bg-brandBlue1x/10`}
-                    >
-                      <UserImg
-                        src={message.project_photo}
-                        width={"w-12 h-12"}
-                        minWidth={"min-w-12"}
-                      />
-
-                      <div className="flex flex-col gap-1">
-                        <p
-                          className={`text-sm font-avenirHeavy text-brandSec500`}
+              {
+                messagesIsLoading
+                  ?
+                  <MessageListTemplate />
+                  :
+                  <div className={`flex flex-col pt-6 pb-20 h-fit`}>
+                    {filteredData?.map((message, idx) => {
+                      return (
+                        <div
+                          key={idx}
+                          onClick={() => openMessage(message)}
+                          className={`flex flex-row gap-4 cursor-pointer w-full py-4 px-2 rounded-ten hover:bg-brandBlue1x/10`}
                         >
-                          {message.name.charAt(0).toUpperCase() +
-                            message.name.slice(1)}
-                        </p>
-                        <p className="text-brandGray4x font-avenirLight text-xs two-lined-text">
-                          {message?.project_message?.[0]?.message}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+                          <UserImg
+                            src={message.project_photo}
+                            width={"w-12 h-12"}
+                            minWidth={"min-w-12"}
+                          />
+
+                          <div className="flex flex-col gap-1">
+                            <p
+                              className={`text-base font-avenirHeavy text-brandSec500`}
+                            >
+                              {message.name.charAt(0).toUpperCase() +
+                                message.name.slice(1)}
+                            </p>
+                            {message?.user_id}
+                            <p className="text-brandGray11x font-avenirLight text-sm two-lined-text">
+                              {message?.project_message?.[0]?.message && 
+                              <>
+                                <span className={`capitalize text-brandSec500`}>{message?.project_message?.[0]?.user_id == user?.user_id ? "You" : `${message?.project_message?.[0]?.user?.first_name} ${message?.project_message?.[0]?.user?.last_name}`}</span>
+                                <span>
+                                  : {message?.project_message?.[0]?.message}</span>
+                              </>}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+              }
             </div>
           </div>
           <div className="flex flex-col gap-4 lg:col-span-4 w-full min-w-full lg:min-w-max px-4 border-r-0.5 border-r-brandGray4x/20 min-h-full">
@@ -267,33 +294,31 @@ const Messages = () => {
                     return (
                       <div
                         key={idx}
-                        className={`text-sm flex flex-col gap-2 ${
-                          isUser ? "self-end" : ""
-                        }`}
+                        className={`text-sm flex flex-col gap-2 ${isUser ? "self-end" : ""
+                          }`}
                       >
                         <div
-                          className={`flex gap-2 items-center ${
-                            isUser ? "self-end flex-row-reverse" : "flex-row"
-                          }`}
+                          className={`flex gap-2 items-center ${isUser ? "self-end flex-row-reverse" : "flex-row"
+                            }`}
                         >
                           <UserImg
                             src={message.user.profile_photo}
                             alt={`${message.user.first_name} ${message.user.last_name}`}
                             width={"w-6"}
                           />
-                          <p className={`capitalize text-xxs text-white`}>
+                          <p className={`capitalize text-xxs text-brandBlue1x`}>
                             {message.user.first_name} {message.user.last_name}
                           </p>
                         </div>
                         <div
-                          className={`rounded-ten w-fit max-w-md ${
-                            isUser
-                              ? "bg-brandBlue1x text-white rounded-tr-none self-end"
-                              : "bg-brandGray4x/20 text-brandBlue1x rounded-tl-none"
-                          } px-3 py-2`}
+                          className={`rounded-ten w-fit max-w-md ${isUser
+                            ? "bg-brandBlue1x text-white rounded-tr-none self-end"
+                            : "bg-brandGray4x/20 text-brandBlue1x rounded-tl-none"
+                            } px-3 py-2`}
                         >
                           <p>{message?.message}</p>
                         </div>
+                        <p className={`${isUser ? "text-right" : "text-left"} text-xxs text-brandGray11x`}>{`${timeSinceAlt(message.created_at)}`}</p>
                       </div>
                     );
                   })}
@@ -324,18 +349,17 @@ const Messages = () => {
               >
                 {
                   submitting
-                  ?
-                  <BeatLoader size={"10px"} />
-                  :
-                  <RiSendPlaneFill
-                  className={`${
-                    formik.values.message
-                      ? "text-brandBlue1x hover:bg-brandBlue1x/20"
-                      : "text-brandGray11x"
-                  }
+                    ?
+                    <BeatLoader size={"10px"} />
+                    :
+                    <RiSendPlaneFill
+                      className={`${formik.values.message
+                        ? "text-brandBlue1x hover:bg-brandBlue1x/20"
+                        : "text-brandGray11x"
+                        }
                   text-2xl transition-all duration-300 ease-in-out`
-                }
-                />
+                      }
+                    />
                 }
               </button>
             </form>

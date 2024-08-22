@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import useGetUser from "../../../utils/useGetUser";
 import UserImg from "../../../components/Sections/UserImg";
 import { useLayoutEffect } from "react";
+import timeSinceAlt from "../../../utils/timeSinceAlt";
 
 const InProjectMessage = ({
   setTranslate,
@@ -153,6 +154,7 @@ const InProjectMessage = ({
                             <div className={`rounded-ten ${isUser ? "bg-brandBlue1x text-white rounded-tr-0" : "bg-white text-brandBlue1x rounded-tl-0"} px-3 py-2`}>
                                 <p>{message?.message}</p>
                             </div>
+                            <p className={`${isUser ? "text-right" : "text-left"} text-xxs text-brandGray11x`}>{`${timeSinceAlt(message.created_at)}`}</p>
                         </div>
                     })
                 }
