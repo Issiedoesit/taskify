@@ -17,6 +17,8 @@ import { FaLock } from 'react-icons/fa'
 import { FaMessage } from "react-icons/fa6";
 import AddUser from './AddUser'
 import InProjectMessage from './ProjectDisplay/InProjectMessage'
+import ProjectManage from './ProjectDisplay/ProjectManage'
+import ConfirmDelete from '../../components/Sections/ConfirmDelete'
 
 const ProjectDynamic = () => {
 
@@ -25,6 +27,9 @@ const ProjectDynamic = () => {
     const [isOpen, setIsOpen] = useState(false)
     const [isAddUserOpen, setIsAddUserOpen] = useState(false)
     const [isViewTaskOpen, setIsViewTaskOpen] = useState(false)
+    const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false)
+    const [deleteAction, setDeleteAction] = useState(null)
+    const [typeIn, setTypeIn] = useState("")
     const [currentTask, setCurrentTask] = useState([])
     const [translate, setTranslate] = useState(false)
     const [header, setHeader] = useState(true)
@@ -38,6 +43,17 @@ const ProjectDynamic = () => {
     const { data: messages, error:messagesError, isLoading:messagesIsLoading, mutate:mutateMessages } = useSWR(import.meta.env.VITE_BASEURL + `/message/group/${projectId}`, fetcher, { refreshInterval: 200 })
 
 
+    const openDeleteMember = (action, typeToDelete) => {
+        setIsConfirmDeleteOpen(true)
+        setDeleteAction(()=>action)
+        setTypeIn(typeToDelete)
+    }
+    const openDeleteProject = (action, typeToDelete) => {
+        setIsConfirmDeleteOpen(true)
+        setDeleteAction(()=>action)
+        setTypeIn(typeToDelete)
+    }
+
     // !isLoading && project?.data && console.log(project)
     // !isLoading && project?.data && console.log(project.data)
     // !messagesIsLoading && messages?.data && console.log(messages.data)
@@ -45,7 +61,7 @@ const ProjectDynamic = () => {
     const projectData = [project?.data?.data] || []
     const messagesData = messages?.data?.data || []
     // console.log("projectData[0].users => ", projectData?.[0]?.users)
-    console.log("Messages => ", messagesData)
+    // console.log("Messages => ", messagesData)
 
     if (isLoading) return <DashTemplate><PageLoaderNoNav /></DashTemplate>
     if (error || messagesError || project.data.code == 400) return <ErrorPageNotFound page={"Projects"} link={"/projects"} message={"Something went wrong"} />
@@ -68,12 +84,13 @@ const ProjectDynamic = () => {
         {
             id: "members",
             name: `Members (${projectData[0].users.length})`,
-            element: <ProjectMembers users={projectData[0].users} creator={projectData[0].creator} isAdmin={isAdmin} />,
+            element: <ProjectMembers openDelete={openDeleteMember} users={projectData[0].users} creator={projectData[0].creator} isAdmin={isAdmin} projectId={projectId} mutate={mutate} />,
             canView: "all"
         },
         {
             id: "manage",
             name: "Manage",
+            element:<ProjectManage openDelete={openDeleteProject} project={projectData?.[0]} projectId={projectId} mutate={mutate} users={projectData[0].users} creator={projectData[0].creator} isAdmin={isAdmin} setIsOpen={setIsAddUserOpen}  />,
             canView: "admin"
         }
     ]
@@ -164,6 +181,7 @@ const ProjectDynamic = () => {
             <ViewTask mutate={mutate} isAdmin={isAdmin} isAssignee={isAssignee} users={projectData?.[0]?.users} setIsOpen={setIsViewTaskOpen} isOpen={isViewTaskOpen} taskData={currentTask} />
             <AddUser projectMembers={projectData?.[0]?.users} setIsOpen={setIsAddUserOpen} isOpen={isAddUserOpen} mutate={mutate} projectId={projectId} projectName={projectData?.[0]?.name} />
             <CreateTask users={projectData?.[0].users} setIsOpen={setIsOpen} isOpen={isOpen} mutate={mutate} projectId={projectId} />
+            <ConfirmDelete name={`${typeIn}`} isOpen={isConfirmDeleteOpen} setIsOpen={setIsConfirmDeleteOpen} handleDelete={deleteAction} typeIn={typeIn}  />
             <ToastContainer />
         </>
     )

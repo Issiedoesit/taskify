@@ -53,7 +53,7 @@ const Deadline = () => {
           <DeadlineCard openTask={openViewTask} isLoading={isLoading} fetched={task} header={"Future"} bgColor={""} tasks={dueFuture} />
         </div>
       </DashTemplate>
-      <ViewTask  mutate={mutate} isAdmin={isAdmin} isAssignee={isAssignee} users={taskData?.[0]?.project?.users} setIsOpen={setIsViewTaskOpen} isOpen={isViewTaskOpen} taskData={currentTask} />
+      <ViewTask mutate={mutate} isAdmin={isAdmin} isAssignee={isAssignee} users={taskData?.[0]?.project?.users} setIsOpen={setIsViewTaskOpen} isOpen={isViewTaskOpen} taskData={currentTask} />
       <ToastContainer />
     </>
   )

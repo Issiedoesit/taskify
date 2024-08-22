@@ -111,7 +111,7 @@ const StatusTag = ({ status, regStatusState, closeView, hideDrop, isFinalStatus,
 
                 })
                 .catch((err) => {
-                    console.error(err);
+                    console.error(err); setSubmitting(false)
                 })
 
         } catch (error) {

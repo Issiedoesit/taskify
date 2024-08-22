@@ -10,6 +10,7 @@ import UserImg from "../../components/Sections/UserImg";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { RiSendPlaneFill } from "react-icons/ri";
+import { BeatLoader } from "react-spinners";
 
 const Messages = () => {
   const [translate, setTranslate] = useState(false);
@@ -20,77 +21,18 @@ const Messages = () => {
 
   const { user, token } = useGetUser();
 
+  const projectId = currentMessage?.[0]?.project_id
+
   const formik = useFormik({
     initialValues: {
       message: "",
     },
     validationSchema: {
-      messages: Yup.string().required("Message required"),
+      message: Yup.string()
+      .required("Message required"),
     },
   });
 
-  const handleMessage = (e) => {
-    e.preventDefault();
-    if (!projectId || formik.errors.message) {
-      // console.log(formik.errors)
-      return;
-    }
-
-    setSubmitting(true);
-    try {
-      const body = {
-        project_id: projectId,
-        message: formik.values.message,
-      };
-
-      //   console.log("body => ", body)
-
-      axios
-        .post(`${import.meta.env.VITE_BASEURL}/message/group`, body, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((res) => {
-          // console.log("Send Message => ", res)
-          //   console.log("Send Message data => ", res?.data);
-          if (
-            res?.data?.status !== "success" &&
-            res?.data?.responseCode !== "00" &&
-            res?.data?.message
-          ) {
-            toast.error(res?.data?.message, {
-              autoClose: 2500,
-            });
-            setSubmitting(false);
-          } else if (
-            res?.data?.status == "success" &&
-            res?.data?.responseCode == "00" &&
-            res?.data?.message
-          ) {
-            formik.resetForm();
-            mutate();
-
-            //   toast.success(res?.data?.message, {
-            //     autoClose:2500
-            //   })
-            setSubmitting(false);
-          } else {
-            // console.log(res);
-            toast.error("Error sending message, Try again later", {
-              autoClose: 2500,
-            });
-            setSubmitting(false);
-          }
-          setSubmitting(false);
-        })
-        .catch((err) => {
-          console.error(err);
-          setSubmitting(false);
-        });
-    } catch (error) {
-      setSubmitting(false);
-      console.error(error);
-    }
-  };
 
   const fetcher = async (url) =>
     axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
@@ -131,6 +73,71 @@ const Messages = () => {
     // const body = document.querySelector("body");
     // body.style.overflow = "";
     // body.style.height = "";
+  };
+
+  const handleMessage = (e) => {
+    e.preventDefault();
+    if (!projectId || formik.errors.message) {
+      // console.log(formik.errors)
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const body = {
+        project_id: projectId,
+        message: formik.values.message,
+      };
+
+      //   console.log("body => ", body)
+
+      axios
+        .post(`${import.meta.env.VITE_BASEURL}/message/group`, body, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          // console.log("Send Message => ", res)
+          //   console.log("Send Message data => ", res?.data);
+          if (
+            res?.data?.status !== "success" &&
+            res?.data?.responseCode !== "00" &&
+            res?.data?.message
+          ) {
+            toast.error(res?.data?.message, {
+              autoClose: 2500,
+            });
+            setSubmitting(false);
+          } else if (
+            res?.data?.status == "success" &&
+            res?.data?.responseCode == "00" &&
+            res?.data?.message
+          ) {
+            formik.resetForm();
+            mutateMessages();
+            const current = messagesData?.filter((data => data.project_id == projectId))
+            setCurrentMessage(current)
+
+            //   toast.success(res?.data?.message, {
+            //     autoClose:2500
+            //   })
+            setSubmitting(false);
+          } else {
+            // console.log(res);
+            toast.error("Error sending message, Try again later", {
+              autoClose: 2500,
+            });
+            setSubmitting(false);
+          }
+          setSubmitting(false);
+        })
+        .catch((err) => {
+          console.error(err); setSubmitting(false)
+          setSubmitting(false);
+        });
+    } catch (error) {
+      setSubmitting(false);
+      console.error(error);
+    }
   };
 
   return (
@@ -321,10 +328,11 @@ const Messages = () => {
               )}
             </div>
             <form
-              className={`flex gap-2 py-1 px-2 w-full bg-white border-0.5 border-brandGray4x rounded-full mb-0 justify-self-end`}
+              className={`flex items-center gap-2 py-1 px-2 w-full bg-white border-0.5 border-brandGray4x rounded-full mb-0 justify-self-end`}
             >
               <label htmlFor="message" className="w-full">
                 <input
+                  disabled={submitting}
                   name="message"
                   id="message"
                   value={formik.values.message}
@@ -339,16 +347,23 @@ const Messages = () => {
                 disabled={submitting}
                 title="Send message"
                 aria-label="Send message"
-                className={`p-1 rounded-r-full flex items-center justify-center`}
+                className={`w-fit h-full aspect-square ${submitting ? "" : "pl-1 pr-2 py-1"} bg-brandBlue1x/20 disabled:bg-brandGray11x rounded-r-full flex items-center justify-center`}
               >
-                <RiSendPlaneFill
+                {
+                  submitting
+                  ?
+                  <BeatLoader size={"10px"} />
+                  :
+                  <RiSendPlaneFill
                   className={`${
                     formik.values.message
                       ? "text-brandBlue1x hover:bg-brandBlue1x/20"
                       : "text-brandGray11x"
                   }
-              text-2xl transition-all duration-300 ease-in-out`}
+                  text-2xl transition-all duration-300 ease-in-out`
+                }
                 />
+                }
               </button>
             </form>
           </div>

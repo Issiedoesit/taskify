@@ -5,7 +5,7 @@ import useSWR from 'swr'
 import PageLoaderNoNav from '../Loaders/PageLoaderNoNav'
 import UserImg from "./UserImg"
 
-const DisplayProjectUsers = ({ selectId, setSelectId, height, useInProject, projectMembers, users }) => {
+const DisplayProjectUsers = ({ selectId, setSelectId, height, useInProject, currentAssignee, useInTask, projectMembers, users }) => {
     const { token } = useGetUser();
     const [searchTerm, setSearchTerm] = useState(''); 
 
@@ -82,14 +82,14 @@ const DisplayProjectUsers = ({ selectId, setSelectId, height, useInProject, proj
                 return  <div
                     key={idx}
                     onClick={() => setSelectId(user.user.user_id)}
-                    className={`${(useInProject && user.user.InProject) ? "pointer-events-none" : ""} ${selectId === user.user.user_id ? "bg-brandBlue1x/50" : "hover:bg-brandBlue1x/20"} transition-all duration-300 ease-in-out rounded-ten p-1 flex flex-row items-center gap-4`}
+                    className={`${(useInTask && user.user.user_id == currentAssignee || useInProject && user.user.InProject) ? "pointer-events-none" : ""} ${selectId === user.user.user_id ? "bg-brandBlue1x/50" : "hover:bg-brandBlue1x/20"} transition-all duration-300 ease-in-out rounded-ten p-1 flex flex-row items-center gap-4`}
                 >
                     <UserImg width={"w-12"} src={user.user.profile_photo} alt={`${user.user.first_name} ${user.user.last_name}`} />
                     <p className='capitalize'>{`${user.user.first_name} ${user.user.last_name}`} 
                     {
-                        (useInProject && user.user.InProject)
+                        (useInTask && user.user.user_id == currentAssignee || useInProject && user.user.InProject)
                         &&
-                        <span className='text-brandGreen4x text-xxs pl-1'>Added</span>
+                        <span className='text-brandGreen4x text-xxs pl-1'>{useInTask ? "Assigned" : "Added"} </span>
                     }
                     </p>
                 </div>

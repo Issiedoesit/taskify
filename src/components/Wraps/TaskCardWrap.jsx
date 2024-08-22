@@ -8,7 +8,7 @@ const TaskCardWrap = ({ projectImg, name, project, link, description, creator, m
 
     const [stackedPics, setStackedPics] = useState(2)
 
-    console.log(project)
+    // console.log(project)
 
 
     const total = project?.tasks?.length

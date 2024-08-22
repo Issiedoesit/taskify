@@ -72,7 +72,7 @@ const AddUser = ({ isOpen, setIsOpen, mutate, projectId, projectName, projectMem
 
                 })
                 .catch((err) => {
-                    console.error(err);
+                    console.error(err); setSubmitting(false)
                 })
 
         } catch (error) {

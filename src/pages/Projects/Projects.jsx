@@ -14,6 +14,7 @@ import { ToastContainer } from 'react-toastify'
 import useLoadMore from '../../utils/useLoadMore'
 import Paginator from '../../components/Pagination/Paginator'
 import usePagination from '../../utils/usePagination'
+import EmptyTable from '../../components/Sections/EmptyTable'
 
 const Projects = () => {
 
@@ -109,15 +110,23 @@ const Projects = () => {
 
                     <div id="projectTableDisplay" className={`flex flex-col gap-8 w-full`}>
                         <HeaderAndText handleClick={() => setIsOpen(true)} header={"Projects"} subHeader={"A glimpse into your projects"} buttonText={"New Project"} />
-                        <div className={`w-full overflow-x-auto`}>
+                        {
+                            !projectData.length !== 0
+                            ?
+                            <>
+                                <div className={`w-full overflow-x-auto`}>
                             <ProjectTable data={displayedData} />
                             {/* <ProjectTable data={slicedDataRows} /> */}
                         </div>
                         <div className='pt-4'>
                             {/* {projectData.length > rowsPerView && <LoadMore rows_per_view={rowsPerView} moreRows={moreRows} rows={rows} listLength={projectData.length} />} */}
                             
-                            {!isLoading && projectData && <Paginator currentPage={currentPage} totalPages={totalPages} dottedArray={dottedArray} movePageBy={movePageBy} paginate={paginate} />}
+                            {!isLoading && projectData && projectData.length > 5 && <Paginator currentPage={currentPage} totalPages={totalPages} dottedArray={dottedArray} movePageBy={movePageBy} paginate={paginate} />}
                         </div>
+                            </>
+                            :
+                            <EmptyTable message={"No Projects added yet"} />
+                        }
                     </div>
                 </div>
             </DashTemplate>

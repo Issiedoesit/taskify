@@ -9,7 +9,7 @@ import AuthFormWrap from '../Widgets/AuthFormWrap'
 import AuthPassword from '../Widgets/AuthPassword'
 import PhoneInput from '../../../components/Form/PhoneInput'
 import ButtonPrimary from '../../../components/Buttons/ButtonPrimary'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import useDocTitle from '../../../hooks/useDocTitle'
 import AuthTemplate from '../../../components/Wraps/AuthTemplate'
 import { ToastContainer, toast } from 'react-toastify'
@@ -35,6 +35,9 @@ const Login = () => {
   const [oneNumber, setOneNumber] = useState(0);
   const [submitting, setSubmitting] = useState(false)
   const [identifier, setIdentifier] = useState("phone")
+  const location = useLocation()
+  const navigate = useNavigate()
+  const returnURL = location.state
 
   
   const formik = useFormik({
@@ -115,7 +118,7 @@ const Login = () => {
 
           // navigate to dashboard
           setTimeout(() => {
-            window.location.href = '/'
+            navigate(returnURL || "")
           }, 2000);
 
           toast.success("Logged in successfully. Redirecting ...", {

@@ -84,7 +84,7 @@ const InProjectMessage = ({
           setSubmitting(false);
         })
         .catch((err) => {
-          console.error(err);
+          console.error(err); setSubmitting(false)
           setSubmitting(false);
         });
     } catch (error) {
@@ -101,7 +101,7 @@ const InProjectMessage = ({
 
 
   useLayoutEffect(()=>{
-      console.log(window.screen.availHeight)
+      // console.log(window.screen.availHeight)
         //   60 is menu height
         // 64 is Header Img height
       const tempHeight = window.screen.availHeight - (60 + 64 + 72)

@@ -15,14 +15,22 @@ import formatDateMonthText from '../../utils/formatDateMonthText'
 import { DateTimePicker } from '@mantine/dates'
 import FormDatePicker from '../Auth/Widgets/FormDatePicker'
 import DisplayProjectUsers from '../../components/Sections/DisplayProjectUsers'
+import convertToUppercase from '../../utils/convertToUppercase'
 
-const CreateTask = ({ isOpen, setIsOpen, mutate, projectId, users }) => {
+const EditTask = ({ isOpen, setIsOpen, mutate, projectId, users, task }) => {
+
+    // console.log("task => ", task)
+
 
     const [submitting, setSubmitting] = useState(false)
-    const [selectId, setSelectId] = useState("")
+    const [selectId, setSelectId] = useState(task?.user_id || "")
     const { token } = useGetUser()
     const [step, setStep] = useState(0)
-    const [due, setDue] = useState(new Date())
+    const [due, setDue] = useState(new Date(task?.due_date) || new Date())
+
+    useState(()=>{
+
+    }, [task])
 
     // {
     //     "title":"test-title" ,
@@ -35,10 +43,10 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId, users }) => {
 
     const formik = useFormik({
         initialValues: {
-            title: "",
-            description: '',
-            notes: "",
-            due_date: `${new Date()}`,
+            title: convertToUppercase(task?.title) || "",
+            description: convertToUppercase(task?.description) || "",
+            notes: convertToUppercase(task?.notes) || "",
+            due_date: `${new Date(task?.due_date)}` || `${new Date()}`,
         },
         validationSchema: Yup.object({
             title: Yup.string()
@@ -62,8 +70,6 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId, users }) => {
         setStep(0)
     }
 
-    // console.log(due)
-
     const handleProjectCreate = (e) => {
         e.preventDefault()
         if (formik.errors.title || formik.errors.description || !due) {
@@ -72,18 +78,29 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId, users }) => {
 
         setSubmitting(true)
 
-        console.log("due => ", due)
+        // Initialize an empty object to store the changed values
+        const changedValues = Object.keys(formik.values).reduce((acc, key) => {
+            // Check if the current value is different from the initial value
+            if (formik.values[key] !== formik.initialValues[key]) {
+                acc[key] = formik.values[key];
+            }
+            return acc;
+        }, {});
 
-        const body = {
-            'title': formik.values.title,
-            'description': formik.values.description,
-            "user_id": selectId,
-            "project_id": projectId,
-            "due_date": due.toISOString(),
-            "notes": formik.values.notes //optional
+        if(due !== new Date(task?.due_date)){
+            changedValues.due_date = due.toISOString()
+        }
+        if(selectId !== task?.user_id){
+            changedValues.user_id = selectId
         }
 
+        // Now `changedValues` is an object that only contains the fields that were changed
+        console.log("Changed Values => ", changedValues);
 
+        // If you need to convert this object to a JSON string (for example, to send it in an API request), you can do:
+        const body = changedValues
+        // const body = JSON.stringify(changedValues);
+        console.log(body)
 
         try {
 
@@ -92,7 +109,7 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId, users }) => {
             // console.log(formValues);
             // setSubmitting(false)
 
-            axios.post(`${import.meta.env.VITE_BASEURL}/task`, body, { headers: { Authorization: `Bearer ${token}` } })
+            axios.patch(`${import.meta.env.VITE_BASEURL}/task/interface/${task?.project_id}/${task?.task_id}`, body, { headers: { Authorization: `Bearer ${token}` } })
                 .then((res) => {
                     console.log('create task data', res.data);
                     console.log('create task message', res.data.message);
@@ -105,7 +122,7 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId, users }) => {
                         setSubmitting(false)
                     } else if (res.data.status == "success" && res.data.responseCode == "00" && res.data.message) {
                         mutate()
-                        toast.success("Task creation successful.", {
+                        toast.success(res?.data?.message, {
                             // position: toast.POSITION.TOP_RIGHT, //can't find position, throwing error
                             autoClose: 2500,
                         });
@@ -145,12 +162,11 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId, users }) => {
 
 
     return (
-        <ModalWrap hideOverflow id={"createTaskModal"} modalState={isOpen} handleModal={() => setIsOpen(false)} >
-
+        <>
             {
                 step == 0
                 &&
-                <ModalInner title={"Create a Task"}>
+                <ModalInner title={"Edit Task"}>
                     <AuthInput inputId={"title"} inputName={"title"} inputLabel={"Title"} inputPlaceholder={"Task X"} handleChange={formik.handleChange} handleBlur={formik.handleBlur} inputValue={formik.values.title} fieldError={formik.touched.title && formik.errors.title} />
                     <AuthInput inputId={"description"} inputName={"description"} inputLabel={"Description"} inputPlaceholder={"A design file for task X space mission..."} handleChange={formik.handleChange} handleBlur={formik.handleBlur} inputValue={formik.values.description} fieldError={formik.touched.description && formik.errors.description} />
                     {/* <AuthInput inputType={"date"} inputId={"due_date"} inputName={"due_date"} inputLabel={"Due date"} inputPlaceholder={""} handleChange={formik.handleChange} handleBlur={formik.handleBlur} inputValue={formik.values.due_date} fieldError={formik.touched.due_date && formik.errors.due_date} /> */}
@@ -158,7 +174,7 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId, users }) => {
                     <FormDatePicker inputId={"due_date"} inputName={"due_date"} fieldError={formik.touched.due_date && formik.errors.due_date} inputValue={due} handleChange={setDue} />
                     <AuthTextArea textAreaLabel={"Notes (Optional)"} textAreaPlaceholder={"Add a note ..."} textAreaId={"notes"} textAreaName={"notes"} handleChange={formik.handleChange} handleBlur={formik.handleBlur} textAreaValue={formik.values.notes} fieldError={formik.touched.notes && formik.errors.notes} />
                     <div className='pt-4'>
-                        <ButtonPrimary disabled={submitting} disabledBgColor={"disabled:bg-brandGray16x"} width={"w-full"} text={"Assign User"} bgColor={"bg-brandBlue1x"} handleClick={nextstep} />
+                        <ButtonPrimary disabled={submitting} disabledBgColor={"disabled:bg-brandGray16x"} width={"w-full"} text={"Change User"} bgColor={"bg-brandBlue1x"} handleClick={nextstep} />
                     </div>
                 </ModalInner>
             }
@@ -166,7 +182,7 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId, users }) => {
             {
                 step == 1
                 &&
-                <ModalInner formHeight={"h-full pb-20"} formTopPad={"pt-4"} height={"h-full"} title={"Create a Task"}>
+                <ModalInner formHeight={"h-full pb-20"} formTopPad={"pt-4"} height={"h-full"} title={"Edit Task"}>
                     <div className='h-full pb-20'>
                         <div className={`pb-4 text-xs`}>
                             <p>
@@ -180,18 +196,18 @@ const CreateTask = ({ isOpen, setIsOpen, mutate, projectId, users }) => {
                         {/* <div className='flex w-full h-fit bg overflow-y-auto'>
                         </div> */}
                         <div className='flex-grow grid h-full overflow-y-auto'>
-                            <DisplayProjectUsers users={users} selectId={selectId} setSelectId={setSelectId} />
+                            <DisplayProjectUsers useInTask currentAssignee={task?.user_id} users={users} selectId={selectId} setSelectId={setSelectId} />
 
                         </div>
                         <div className='pt-6 flex flex-row gap-2'>
                             <ButtonPrimary disabled={submitting} disabledBgColor={"disabled:bg-brandGray16x"} width={"w-full"} text={"Back"} bgColor={"bg-brandSec500"} handleClick={() => setStep(0)} />
-                            <ButtonPrimary disabled={submitting} disabledBgColor={"disabled:bg-brandGray16x"} width={"w-full"} text={"Create"} bgColor={"bg-brandBlue1x"} handleClick={handleProjectCreate} />
+                            <ButtonPrimary disabled={submitting} disabledBgColor={"disabled:bg-brandGray16x"} width={"w-full"} text={"Confirm"} bgColor={"bg-brandBlue1x"} handleClick={handleProjectCreate} />
                         </div>
                     </div>
                 </ModalInner>
             }
-        </ModalWrap>
+        </>
     )
 }
 
-export default CreateTask
+export default EditTask

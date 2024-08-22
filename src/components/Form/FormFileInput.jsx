@@ -7,12 +7,16 @@ import { GiCheckMark } from 'react-icons/gi'
 const FormFileInput = ({ fieldsetId, formik, handleCancel, handleFileUpload, uploadedImageUrl, actionText, fileValue, uploading, errorUpload, fileInputId, fileInputName }) => {
 
   const [touched, setTouched] = useState(false)
+  const [file, setFile] = useState(fileValue)
 
   const handleFileInput = (e) => {
+    setFile("")
+    console.log(e.target.files[0])
+
     setTouched(true)
     // console.log(import.meta.env.VITE_MAX_FILE_SIZE);
     formik.setFieldValue(`${fileInputId}`, e.target.files[0])
-    // console.log(e.target.files[0])
+    setFile(e.target.files[0])
   }
 
   const isFileObject = (object) => {
@@ -25,9 +29,9 @@ const FormFileInput = ({ fieldsetId, formik, handleCancel, handleFileUpload, upl
     <fieldset id={fieldsetId} className=''>
       <div className="mx-auto w-fit pb-4">
         {
-          fileValue
+          file
             ?
-            <img src={fileValue ? isFileObject(fileValue) ? URL.createObjectURL(fileValue) : fileValue : Avatar} alt="Avatar" className='h-16 w-16 rounded-full aspect-square' />
+            <img src={file ? isFileObject(file) ? URL.createObjectURL(file) : file : Avatar} alt="Avatar" className='h-16 w-16 rounded-full aspect-square' />
             :
             <div className={`p-2 rounded-full bg-brandBlue1x/20`}>
               <svg className={`h-10 w-10 opacity-20`} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -37,13 +41,14 @@ const FormFileInput = ({ fieldsetId, formik, handleCancel, handleFileUpload, upl
             </div>
         }
       </div>
+      {/* <p>{`${file && isFileObject(file) ? URL.createObjectURL(file) : file}`}</p> */}
       <label htmlFor={fileInputId} className='w-fit cursor-pointer mx-auto flex flex-col gap-3 items-center justify-center'>
         {/* <div className='text-xs rounded-fifty border-2 border-black py-2 px-4'>
           {
             !errorUpload
             ?
             <div>
-              {!uploadedImageUrl || !fileValue ? 
+              {!uploadedImageUrl || !file ? 
               uploading ? 
               <span className={`flex gap-2 items-center`}>Uploading <BeatLoader size={'10px'} color={`#2A2AB2`} /></span> : 
               <span>{actionText || 'Choose Business photo'}</span> : 
@@ -69,18 +74,18 @@ const FormFileInput = ({ fieldsetId, formik, handleCancel, handleFileUpload, upl
           }
         </div> */}
         <div className='text-xs rounded-fifty border-2 border-black py-2 px-4' >
-          <span>{!(touched && fileValue) ? (actionText || 'Choose Profile photo') : fileValue?.name}</span>
+          <span>{!(touched && file) ? (actionText || 'Choose Profile photo') : file?.name}</span>
         </div>
         <input required readOnly={uploading} type="file" name={fileInputName} id={fileInputId} onChange={(e) => { handleFileInput(e) }} onBlur={formik.handleBlur} className="hidden peer" accept=".jpg,.jpeg,.png,.gif,image/*" />
       </label>
-      {formik.errors[fileInputId] && touched && fileValue
+      {formik.errors[fileInputId] && touched && file
         ?
         <p className={`text-xs text-right text-brandRed1x py-2`}>*** {formik.errors[fileInputId]}</p>
         :
         ""
         //   <div>
         //     {
-        //       (touched && fileValue && !uploadedImageUrl && !errorUpload)
+        //       (touched && file && !uploadedImageUrl && !errorUpload)
         //       &&
         //       <div className={`flex items-center gap-3 justify-end py-2 flex-wrap`}>
         //         <p className='text-brandGray14x text-xs'>Use this image ?</p>
